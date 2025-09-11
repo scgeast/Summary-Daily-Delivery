@@ -1,1 +1,24 @@
-
+[
+    {
+        "DP No": "330011889",
+        "DP Date": "2025-08-01",
+        "Area": "EAST INDONESIA",
+        "Plant Name": "Krian",
+        "QTY": 6,
+        "End Customer Name": "Customer A",
+        "Truck No": "A861",
+        "Sales Man": "AGOES WAHYU PRIAMBADA",
+        "Distance": 23
+    },
+    {
+        "DP No": "330011890",
+        "DP Date": "2025-08-01",
+        "Area": "EAST INDONESIA",
+        "Plant Name": "Krian",
+        "QTY": 6,
+        "End Customer Name": "Customer B",
+        "Truck No": "A825",
+        "Sales Man": "AGOES WAHYU PRIAMBADA",
+        "Distance": 23
+    }
+]
