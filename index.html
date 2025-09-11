@@ -6,8 +6,10 @@
     <title>Dashboard Daily Delivery</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
+        /* CSS yang sama seperti sebelumnya */
         * {
             margin: 0;
             padding: 0;
@@ -245,6 +247,7 @@
             border-radius: 10px;
             margin-bottom: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
         }
         
         .chart-title {
@@ -255,11 +258,43 @@
             border-bottom: 1px solid #eee;
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
         
         .chart-title i {
             margin-right: 10px;
             color: #3498db;
+        }
+        
+        .chart-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-data-labels {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-data-labels i {
+            margin-right: 5px;
+            color: #7f8c8d;
+        }
+        
+        .toggle-data-labels.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .toggle-data-labels.active i {
+            color: white;
         }
         
         .chart-wrapper {
@@ -330,6 +365,15 @@
             
             .tabs {
                 flex-direction: column;
+            }
+            
+            .chart-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .chart-controls {
+                margin-top: 10px;
             }
         }
         
@@ -479,28 +523,56 @@
                 <h2 class="section-title"><i class="fas fa-shipping-fast"></i> Delivery</h2>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Volume per Area</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-chart-bar"></i> Total Volume per Area</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="volumePerAreaChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerAreaChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Volume per Plant</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-chart-bar"></i> Total Volume per Plant</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="volumePerPlantChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerPlantChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-line"></i> Average Volume per Plant</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-chart-line"></i> Average Volume per Plant</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="avgVolumePerPlantChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="avgVolumePerPlantChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-line"></i> Trend Volume Harian per Plant</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-chart-line"></i> Trend Volume Harian per Plant</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="dailyTrendChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="dailyTrendChart"></canvas>
                     </div>
@@ -510,21 +582,42 @@
                 <h2 class="section-title"><i class="fas fa-truck-loading"></i> Utilisasi TM</h2>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Trip per TM</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-chart-bar"></i> Total Trip per TM</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="tripPerTruckChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="tripPerTruckChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Volume per TM</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-chart-bar"></i> Total Volume per TM</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="volumePerTruckChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerTruckChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-line"></i> Average Load per TM</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-chart-line"></i> Average Load per TM</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="avgLoadPerTruckChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="avgLoadPerTruckChart"></canvas>
                     </div>
@@ -534,14 +627,28 @@
                 <h2 class="section-title"><i class="fas fa-route"></i> Distance</h2>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-line"></i> Average Distance per Plant</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-chart-line"></i> Average Distance per Plant</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="avgDistancePerPlantChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="avgDistancePerPlantChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-line"></i> Trend Volume per Distance</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-chart-line"></i> Trend Volume per Distance</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="volumePerDistanceChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerDistanceChart"></canvas>
                     </div>
@@ -551,14 +658,28 @@
             <!-- Sales & Customer Tab -->
             <div class="tab-content" id="sales">
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-user-tie"></i> Volume per Sales</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-user-tie"></i> Volume per Sales</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="volumePerSalesChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerSalesChart"></canvas>
                     </div>
                 </div>
                 
                 <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-users"></i> Top 30 Customers by Volume</h3>
+                    <h3 class="chart-title">
+                        <span><i class="fas fa-users"></i> Top 30 Customers by Volume</span>
+                        <div class="chart-controls">
+                            <button class="toggle-data-labels" data-chart="volumePerCustomerChart">
+                                <i class="fas fa-tag"></i> Data Labels
+                            </button>
+                        </div>
+                    </h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerCustomerChart"></canvas>
                     </div>
@@ -576,6 +697,7 @@
         let rawData = [];
         let filteredData = [];
         let charts = {};
+        let dataLabelsEnabled = false;
         
         // Set last update time
         document.getElementById('updateTime').textContent = new Date().toLocaleString();
@@ -596,6 +718,17 @@
                 // Add active class to clicked tab and corresponding content
                 this.classList.add('active');
                 document.getElementById(this.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // Set up data labels toggle
+        document.querySelectorAll('.toggle-data-labels').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                dataLabelsEnabled = this.classList.contains('active');
+                
+                // Update all charts
+                updateCharts();
             });
         });
         
@@ -641,15 +774,15 @@
                         const normalizedHeader = header.toString().toLowerCase().replace(/\s+/g, '');
                         
                         // Map headers to our expected format
-                        if (normalizedHeader.includes('dpno') || normalizedHeader.includes('trip') || normalizedHeader.includes('ritase')) return 'DP No';
-                        if (normalizedHeader.includes('dpdate') || normalizedHeader.includes('deliverydate')) return 'DP Date';
+                        if (normalizedHeader.includes('dpno') || normalizedHeader.includes('trip') || normalizedHeader.includes('ritase') || normalizedHeader.includes('no')) return 'DP No';
+                        if (normalizedHeader.includes('dpdate') || normalizedHeader.includes('deliverydate') || normalizedHeader.includes('date')) return 'DP Date';
                         if (normalizedHeader.includes('area') || normalizedHeader.includes('region')) return 'Area';
-                        if (normalizedHeader.includes('plantname') || normalizedHeader.includes('plant')) return 'Plant Name';
-                        if (normalizedHeader.includes('qty') || normalizedHeader.includes('volume')) return 'QTY';
-                        if (normalizedHeader.includes('endcustomer') || normalizedHeader.includes('customer')) return 'End Customer Name';
-                        if (normalizedHeader.includes('truckno') || normalizedHeader.includes('tm') || normalizedHeader.includes('truck')) return 'Truck No';
-                        if (normalizedHeader.includes('salesman') || normalizedHeader.includes('sales')) return 'Sales Man';
-                        if (normalizedHeader.includes('distance')) return 'Distance';
+                        if (normalizedHeader.includes('plantname') || normalizedHeader.includes('plant') || normalizedHeader.includes('depo')) return 'Plant Name';
+                        if (normalizedHeader.includes('qty') || normalizedHeader.includes('volume') || normalizedHeader.includes('quantity')) return 'QTY';
+                        if (normalizedHeader.includes('endcustomer') || normalizedHeader.includes('customer') || normalizedHeader.includes('endcustomer')) return 'End Customer Name';
+                        if (normalizedHeader.includes('truckno') || normalizedHeader.includes('tm') || normalizedHeader.includes('truck') || normalizedHeader.includes('nopol')) return 'Truck No';
+                        if (normalizedHeader.includes('salesman') || normalizedHeader.includes('sales') || normalizedHeader.includes('salesman')) return 'Sales Man';
+                        if (normalizedHeader.includes('distance') || normalizedHeader.includes('jarak')) return 'Distance';
                         
                         return header;
                     });
@@ -840,18 +973,25 @@
             }
             
             // Calculate KPIs
-            const areas = new Set(filteredData.map(item => item.Area));
-            const plants = new Set(filteredData.map(item => item['Plant Name']));
-            const trucks = new Set(filteredData.map(item => item['Truck No']));
+            const areas = new Set(filteredData.map(item => item.Area).filter(Boolean));
+            const plants = new Set(filteredData.map(item => item['Plant Name']).filter(Boolean));
+            const trucks = new Set(filteredData.map(item => item['Truck No']).filter(Boolean));
             const totalVolume = filteredData.reduce((sum, item) => sum + (Number(item.QTY) || 0), 0);
             const totalTrips = filteredData.length;
-            const avgVolume = totalTrips > 0 ? (totalVolume / totalTrips).toFixed(2) : 0;
-            const avgLoad = avgVolume; // Assuming load is equivalent to volume
+            
+            // Calculate unique days in the filtered data
+            const uniqueDays = new Set(filteredData.map(item => {
+                const date = new Date(item['DP Date']);
+                return date.toDateString();
+            })).size;
+            
+            const avgVolume = uniqueDays > 0 ? (totalVolume / uniqueDays).toFixed(2) : 0;
+            const avgLoad = totalTrips > 0 ? (totalVolume / totalTrips).toFixed(2) : 0;
             
             // Update KPI cards
             document.getElementById('totalArea').textContent = areas.size;
             document.getElementById('totalPlant').textContent = plants.size;
-            document.getElementById('totalVolume').textContent = `${totalVolume} m³`;
+            document.getElementById('totalVolume').textContent = `${totalVolume.toFixed(2)} m³`;
             document.getElementById('avgVolume').textContent = `${avgVolume} m³`;
             document.getElementById('totalTruck').textContent = trucks.size;
             document.getElementById('avgLoad').textContent = avgLoad;
@@ -870,15 +1010,16 @@
         function calculateChartData() {
             if (filteredData.length === 0) {
                 return {
-                    areas: [], plants: [], volumes: [], avgVolumes: [],
+                    areas: [], volumes: [], 
+                    plants: [], plantVolumes: [], plantAvgVolumes: [],
                     trucks: [], tripsPerTruck: [], volumePerTruck: [], avgLoadPerTruck: [],
-                    sales: [], salesVolume: [], customers: [], customerVolume: [],
-                    dates: [], dailyVolume: [], distances: [], volumePerDistance: [], avgDistancePerPlant: []
+                    sales: [], salesVolume: [], 
+                    customers: [], customerVolume: [],
+                    dates: [], dailyVolume: [], 
+                    distances: [], volumePerDistance: [], 
+                    plantDistances: [], avgDistancePerPlant: []
                 };
             }
-            
-            // Calculate actual data from filteredData
-            // This is a simplified version - in a real app, you would calculate based on filteredData
             
             // Group by area
             const areaData = {};
@@ -891,7 +1032,6 @@
             
             const areas = Object.keys(areaData);
             const volumes = areas.map(area => areaData[area].total);
-            const avgVolumes = areas.map(area => (areaData[area].total / areaData[area].count).toFixed(2));
             
             // Group by plant
             const plantData = {};
@@ -959,7 +1099,7 @@
             // Group by distance
             const distanceData = {};
             filteredData.forEach(item => {
-                const distance = item.Distance ? `${item.Distance} km` : 'Unknown';
+                const distance = item.Distance ? `${Math.round(item.Distance)} km` : 'Unknown';
                 if (!distanceData[distance]) distanceData[distance] = 0;
                 distanceData[distance] += Number(item.QTY) || 0;
             });
@@ -971,12 +1111,14 @@
             const plantDistanceData = {};
             filteredData.forEach(item => {
                 const plant = item['Plant Name'] || 'Unknown';
+                const distance = Number(item.Distance) || 0;
                 if (!plantDistanceData[plant]) plantDistanceData[plant] = { total: 0, count: 0 };
-                plantDistanceData[plant].total += Number(item.Distance) || 0;
+                plantDistanceData[plant].total += distance;
                 plantDistanceData[plant].count += 1;
             });
             
-            const avgDistancePerPlant = plants.map(plant => {
+            const plantDistances = plants;
+            const avgDistancePerPlant = plantDistances.map(plant => {
                 if (plantDistanceData[plant]) {
                     return (plantDistanceData[plant].total / plantDistanceData[plant].count).toFixed(2);
                 }
@@ -984,11 +1126,14 @@
             });
             
             return {
-                areas, volumes, avgVolumes: plantAvgVolumes,
-                plants: plants, plantVolumes,
+                areas, volumes, 
+                plants, plantVolumes, plantAvgVolumes,
                 trucks, tripsPerTruck, volumePerTruck, avgLoadPerTruck,
-                sales, salesVolume, customers, customerVolume,
-                dates, dailyVolume, distances, volumePerDistance, avgDistancePerPlant
+                sales, salesVolume, 
+                customers, customerVolume,
+                dates, dailyVolume, 
+                distances, volumePerDistance, 
+                plantDistances, avgDistancePerPlant
             };
         }
         
@@ -999,31 +1144,69 @@
                 if (chart) chart.destroy();
             });
             
+            // Helper function to generate gradient colors
+            function createGradient(ctx, area, colors) {
+                const gradient = ctx.createLinearGradient(0, area.bottom, 0, area.top);
+                gradient.addColorStop(0, colors[0]);
+                gradient.addColorStop(1, colors[1]);
+                return gradient;
+            }
+            
             // Helper function to generate background colors with highlight for max value
-            function getHighlightColors(values) {
+            function getHighlightColors(ctx, area, values, colors) {
                 if (values.length === 0) return [];
                 
                 const maxValue = Math.max(...values);
-                return values.map(value => value === maxValue ? '#e74c3c' : '#3498db');
+                return values.map(value => {
+                    if (value === maxValue) {
+                        return createGradient(ctx, area, ['#ff6b6b', '#c0392b']);
+                    } else {
+                        return createGradient(ctx, area, colors);
+                    }
+                });
             }
+            
+            // Chart options with data labels configuration
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        display: dataLabelsEnabled,
+                        color: '#000',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: function(value, context) {
+                            return value.toLocaleString();
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            };
             
             // Volume per Area Chart
             if (data.areas.length > 0) {
-                charts.volumePerArea = new Chart(document.getElementById('volumePerAreaChart'), {
+                const ctx = document.getElementById('volumePerAreaChart').getContext('2d');
+                const area = ctx.canvas;
+                charts.volumePerArea = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: data.areas,
                         datasets: [{
                             label: 'Volume (m³)',
                             data: data.volumes,
-                            backgroundColor: getHighlightColors(data.volumes),
+                            backgroundColor: getHighlightColors(ctx, area, data.volumes, ['#3498db', '#2980b9']),
                             borderColor: '#2980b9',
                             borderWidth: 1
                         }]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
+                        ...chartOptions,
                         scales: {
                             y: {
                                 beginAtZero: true,
@@ -1033,27 +1216,29 @@
                                 }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
             }
             
             // Volume per Plant Chart
             if (data.plants.length > 0) {
-                charts.volumePerPlant = new Chart(document.getElementById('volumePerPlantChart'), {
+                const ctx = document.getElementById('volumePerPlantChart').getContext('2d');
+                const area = ctx.canvas;
+                charts.volumePerPlant = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: data.plants,
                         datasets: [{
                             label: 'Volume (m³)',
                             data: data.plantVolumes,
-                            backgroundColor: getHighlightColors(data.plantVolumes),
-                            borderColor: '#27ae60',
+                            backgroundColor: getHighlightColors(ctx, area, data.plantVolumes, ['#27ae60', '#219653']),
+                            borderColor: '#219653',
                             borderWidth: 1
                         }]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
+                        ...chartOptions,
                         scales: {
                             y: {
                                 beginAtZero: true,
@@ -1063,14 +1248,314 @@
                                 }
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]
                 });
             }
             
-            // Other charts would be initialized similarly...
-            // For brevity, I'm only showing two chart initializations
+            // Average Volume per Plant Chart
+            if (data.plants.length > 0) {
+                const ctx = document.getElementById('avgVolumePerPlantChart').getContext('2d');
+                const area = ctx.canvas;
+                charts.avgVolumePerPlant = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.plants,
+                        datasets: [{
+                            label: 'Average Volume (m³)',
+                            data: data.plantAvgVolumes,
+                            backgroundColor: getHighlightColors(ctx, area, data.plantAvgVolumes, ['#9b59b6', '#8e44ad']),
+                            borderColor: '#8e44ad',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Average Volume (m³)'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
             
-            console.log('Charts initialized/updated');
+            // Daily Trend Chart
+            if (data.dates.length > 0) {
+                const ctx = document.getElementById('dailyTrendChart').getContext('2d');
+                charts.dailyTrend = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.dates,
+                        datasets: [{
+                            label: 'Daily Volume (m³)',
+                            data: data.dailyVolume,
+                            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(52, 152, 219, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(52, 152, 219, 1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Volume (m³)'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+            
+            // Trip per Truck Chart
+            if (data.trucks.length > 0) {
+                const ctx = document.getElementById('tripPerTruckChart').getContext('2d');
+                const area = ctx.canvas;
+                charts.tripPerTruck = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.trucks,
+                        datasets: [{
+                            label: 'Number of Trips',
+                            data: data.tripsPerTruck,
+                            backgroundColor: getHighlightColors(ctx, area, data.tripsPerTruck, ['#e67e22', '#d35400']),
+                            borderColor: '#d35400',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Trips'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+            
+            // Volume per Truck Chart
+            if (data.trucks.length > 0) {
+                const ctx = document.getElementById('volumePerTruckChart').getContext('2d');
+                const area = ctx.canvas;
+                charts.volumePerTruck = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.trucks,
+                        datasets: [{
+                            label: 'Volume (m³)',
+                            data: data.volumePerTruck,
+                            backgroundColor: getHighlightColors(ctx, area, data.volumePerTruck, ['#f1c40f', '#f39c12']),
+                            borderColor: '#f39c12',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Volume (m³)'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+            
+            // Average Load per Truck Chart
+            if (data.trucks.length > 0) {
+                const ctx = document.getElementById('avgLoadPerTruckChart').getContext('2d');
+                const area = ctx.canvas;
+                charts.avgLoadPerTruck = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.trucks,
+                        datasets: [{
+                            label: 'Average Load (m³)',
+                            data: data.avgLoadPerTruck,
+                            backgroundColor: getHighlightColors(ctx, area, data.avgLoadPerTruck, ['#1abc9c', '#16a085']),
+                            borderColor: '#16a085',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Average Load (m³)'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+            
+            // Average Distance per Plant Chart
+            if (data.plantDistances.length > 0) {
+                const ctx = document.getElementById('avgDistancePerPlantChart').getContext('2d');
+                const area = ctx.canvas;
+                charts.avgDistancePerPlant = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.plantDistances,
+                        datasets: [{
+                            label: 'Average Distance (km)',
+                            data: data.avgDistancePerPlant,
+                            backgroundColor: getHighlightColors(ctx, area, data.avgDistancePerPlant, ['#e74c3c', '#c0392b']),
+                            borderColor: '#c0392b',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Average Distance (km)'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+            
+            // Volume per Distance Chart
+            if (data.distances.length > 0) {
+                const ctx = document.getElementById('volumePerDistanceChart').getContext('2d');
+                charts.volumePerDistance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.distances,
+                        datasets: [{
+                            label: 'Volume per Distance (m³)',
+                            data: data.volumePerDistance,
+                            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(231, 76, 60, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(231, 76, 60, 1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Volume (m³)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Distance (km)'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+            
+            // Volume per Sales Chart
+            if (data.sales.length > 0) {
+                const ctx = document.getElementById('volumePerSalesChart').getContext('2d');
+                const area = ctx.canvas;
+                charts.volumePerSales = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.sales,
+                        datasets: [{
+                            label: 'Volume (m³)',
+                            data: data.salesVolume,
+                            backgroundColor: getHighlightColors(ctx, area, data.salesVolume, ['#34495e', '#2c3e50']),
+                            borderColor: '#2c3e50',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Volume (m³)'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+            
+            // Volume per Customer Chart
+            if (data.customers.length > 0) {
+                const ctx = document.getElementById('volumePerCustomerChart').getContext('2d');
+                const area = ctx.canvas;
+                charts.volumePerCustomer = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.customers,
+                        datasets: [{
+                            label: 'Volume (m³)',
+                            data: data.customerVolume,
+                            backgroundColor: getHighlightColors(ctx, area, data.customerVolume, ['#7f8c8d', '#636e72']),
+                            borderColor: '#636e72',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Volume (m³)'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
         }
         
         // Helper function to format date
