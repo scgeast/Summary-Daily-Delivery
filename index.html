@@ -393,6 +393,17 @@
         .empty-state p {
             font-size: 18px;
         }
+        
+        /* Debug Info */
+        .debug-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -472,6 +483,9 @@
             
             <!-- Loading Spinner -->
             <div class="spinner" id="loadingSpinner"></div>
+            
+            <!-- Debug Info -->
+            <div class="debug-info" id="debugInfo"></div>
             
             <!-- Empty State (shown initially) -->
             <div class="empty-state" id="emptyState">
@@ -691,28 +705,34 @@
                     // Convert to JSON with header mapping
                     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                     
+                    // Debug file structure
+                    debugFileStructure(jsonData);
+                    
                     // Extract headers and map them
                     const headers = jsonData[0].map(header => {
+                        if (!header) return 'Unknown';
+                        
                         const normalizedHeader = header.toString().toLowerCase().replace(/\s+/g, '');
                         
                         // Map headers to our expected format
                         if (normalizedHeader.includes('dpno') || normalizedHeader.includes('trip') || normalizedHeader.includes('ritase')) return 'DP No';
-                        if (normalizedHeader.includes('dpdate') || normalizedHeader.includes('deliverydate')) return 'DP Date';
-                        if (normalizedHeader.includes('area') || normalizedHeader.includes('region')) return 'Area';
-                        if (normalizedHeader.includes('plantname') || normalizedHeader.includes('plant')) return 'Plant Name';
-                        if (normalizedHeader.includes('qty') || normalizedHeader.includes('volume')) return 'QTY';
-                        if (normalizedHeader.includes('endcustomer') || normalizedHeader.includes('customer')) return 'End Customer Name';
-                        if (normalizedHeader.includes('truckno') || normalizedHeader.includes('tm') || normalizedHeader.includes('truck')) return 'Truck No';
-                        if (normalizedHeader.includes('trucktype') || normalizedHeader.includes('typetruck') || normalizedHeader.includes('typetm')) return 'Truck Type';
-                        if (normalizedHeader.includes('salesman') || normalizedHeader.includes('sales')) return 'Sales Man';
-                        if (normalizedHeader.includes('distance')) return 'Distance';
+                        if (normalizedHeader.includes('dpdate') || normalizedHeader.includes('deliverydate') || normalizedHeader.includes('tanggal')) return 'DP Date';
+                        if (normalizedHeader.includes('area') || normalizedHeader.includes('region') || normalizedHeader.includes('zona')) return 'Area';
+                        if (normalizedHeader.includes('plantname') || normalizedHeader.includes('plant') || normalizedHeader.includes('namaplant')) return 'Plant Name';
+                        if (normalizedHeader.includes('qty') || normalizedHeader.includes('volume') || normalizedHeader.includes('p5') || normalizedHeader.includes('quantity')) return 'QTY';
+                        if (normalizedHeader.includes('endcustomer') || normalizedHeader.includes('customer') || normalizedHeader.includes('pelanggan')) return 'End Customer Name';
+                        if (normalizedHeader.includes('truckno') || normalizedHeader.includes('tm') || normalizedHeader.includes('truck') || normalizedHeader.includes('nopol')) return 'Truck No';
+                        if (normalizedHeader.includes('trucktype') || normalizedHeader.includes('typetruck') || normalizedHeader.includes('typetm') || normalizedHeader.includes('tipetruk')) return 'Truck Type';
+                        if (normalizedHeader.includes('salesman') || normalizedHeader.includes('sales') || normalizedHeader.includes('salesman')) return 'Sales Man';
+                        if (normalizedHeader.includes('distance') || normalizedHeader.includes('jarak')) return 'Distance';
+                        if (normalizedHeader.includes('zone') || normalizedHeader.includes('zona')) return 'Zone';
                         
                         return header;
                     });
                     
                     // Convert data rows to objects
                     const dataRows = jsonData.slice(1);
-                    rawData = dataRows.map(row => {
+                    rawData = dataRows.map((row, index) => {
                         const obj = {};
                         headers.forEach((header, i) => {
                             if (header === 'DP Date' && row[i]) {
@@ -722,12 +742,52 @@
                                 } else {
                                     obj[header] = new Date(row[i]);
                                 }
+                            } else if (header === 'QTY' && row[i] !== undefined && row[i] !== null) {
+                                // Handle various QTY formats
+                                let qtyValue = row[i];
+                                
+                                // If it's a string, clean it up
+                                if (typeof qtyValue === 'string') {
+                                    // Remove any non-numeric characters except decimal points and commas
+                                    qtyValue = qtyValue.toString().replace(/[^\d.,-]/g, '');
+                                    
+                                    // Handle negative values
+                                    const isNegative = qtyValue.includes('-');
+                                    if (isNegative) {
+                                        qtyValue = qtyValue.replace('-', '');
+                                    }
+                                    
+                                    // Replace comma with dot for decimal values
+                                    if (qtyValue.includes(',')) {
+                                        qtyValue = qtyValue.replace(',', '.');
+                                    }
+                                    
+                                    // Convert to number and apply negative sign if needed
+                                    qtyValue = parseFloat(qtyValue) || 0;
+                                    if (isNegative) {
+                                        qtyValue = -qtyValue;
+                                    }
+                                }
+                                
+                                // Convert to number
+                                obj[header] = parseFloat(qtyValue) || 0;
                             } else {
                                 obj[header] = row[i];
                             }
                         });
                         return obj;
                     }).filter(item => item['DP No']); // Filter out empty rows
+                    
+                    // Validate data and show issues
+                    const issues = validateData(rawData);
+                    if (issues.length > 0) {
+                        document.getElementById('debugInfo').style.display = 'block';
+                        document.getElementById('debugInfo').innerHTML = `
+                            <strong>Data Validation Issues Found (${issues.length}):</strong><br>
+                            ${issues.slice(0, 5).join('<br>')}
+                            ${issues.length > 5 ? '<br>... and ' + (issues.length - 5) + ' more issues' : ''}
+                        `;
+                    }
                     
                     // Update date filters based on data
                     updateDateFilters();
@@ -745,6 +805,56 @@
             };
             
             reader.readAsArrayBuffer(file);
+        }
+        
+        // Function to debug file structure
+        function debugFileStructure(jsonData) {
+            console.log("File structure debug:");
+            console.log("Number of rows:", jsonData.length);
+            console.log("Headers:", jsonData[0]);
+            
+            // Check QTY column index
+            const headers = jsonData[0];
+            const qtyIndex = headers.findIndex(header => {
+                if (!header) return false;
+                const normalizedHeader = header.toString().toLowerCase().replace(/\s+/g, '');
+                return normalizedHeader.includes('qty') || normalizedHeader.includes('volume') || normalizedHeader.includes('p5');
+            });
+            
+            console.log("QTY column index:", qtyIndex);
+            if (qtyIndex !== -1) {
+                console.log("Sample QTY values:");
+                for (let i = 1; i < Math.min(6, jsonData.length); i++) {
+                    console.log(`Row ${i} QTY:`, jsonData[i][qtyIndex], "Type:", typeof jsonData[i][qtyIndex]);
+                }
+            }
+        }
+        
+        // Function to validate data and show issues
+        function validateData(data) {
+            const issues = [];
+            let totalVolume = 0;
+            let validRecords = 0;
+            
+            data.forEach((item, index) => {
+                if (item['QTY'] === undefined || item['QTY'] === null) {
+                    issues.push(`Row ${index + 2}: QTY is missing`);
+                } else if (isNaN(item['QTY'])) {
+                    issues.push(`Row ${index + 2}: QTY is not a number (${item['QTY']})`);
+                } else if (typeof item['QTY'] === 'string') {
+                    issues.push(`Row ${index + 2}: QTY is text instead of number (${item['QTY']})`);
+                } else {
+                    totalVolume += item['QTY'];
+                    validRecords++;
+                }
+            });
+            
+            if (issues.length > 0) {
+                console.warn('Data validation issues:', issues);
+            }
+            
+            console.log(`Data validation: ${validRecords} valid records, total volume: ${formatNumber(totalVolume)}`);
+            return issues;
         }
         
         // Function to update date filters based on data
@@ -1559,7 +1669,7 @@
         
         // Helper function to format numbers with thousand separators and optional decimals
         function formatNumber(num, decimals = 2) {
-            if (num === null || num === undefined) return '0';
+            if (num === null || num === undefined || isNaN(num)) return '0';
             
             // Convert to number if it's a string
             num = typeof num === 'string' ? parseFloat(num) : num;
