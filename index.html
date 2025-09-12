@@ -217,6 +217,12 @@
             color: #2c3e50;
         }
         
+        .kpi-card .subtitle {
+            font-size: 12px;
+            color: #95a5a6;
+            margin-top: 5px;
+        }
+        
         /* Tabs */
         .tabs {
             display: flex;
@@ -233,7 +239,7 @@
             background: #f8f9fa;
             border: none;
             font-size: 16px;
-            fontWeight: 600;
+            font-weight: 600;
             color: #7f8c8d;
             transition: all 0.3s ease;
             display: flex;
@@ -477,10 +483,12 @@
                 <div class="kpi-card">
                     <h3>Total Volume</h3>
                     <div class="value" id="totalVolume">0 m³</div>
+                    <div class="subtitle" id="totalVolumeSubtitle"></div>
                 </div>
                 <div class="kpi-card">
                     <h3>Avg Volume</h3>
                     <div class="value" id="avgVolume">0 m³</div>
+                    <div class="subtitle" id="avgVolumeSubtitle"></div>
                 </div>
                 <div class="kpi-card">
                     <h3>Total Truck</h3>
@@ -489,6 +497,7 @@
                 <div class="kpi-card">
                     <h3>Avg Load/Trip</h3>
                     <div class="value" id="avgLoad">0</div>
+                    <div class="subtitle" id="avgLoadSubtitle"></div>
                 </div>
             </div>
             
@@ -869,9 +878,12 @@
                 document.getElementById('totalArea').textContent = '0';
                 document.getElementById('totalPlant').textContent = '0';
                 document.getElementById('totalVolume').textContent = '0 m³';
+                document.getElementById('totalVolumeSubtitle').textContent = '';
                 document.getElementById('avgVolume').textContent = '0 m³';
+                document.getElementById('avgVolumeSubtitle').textContent = '';
                 document.getElementById('totalTruck').textContent = '0';
                 document.getElementById('avgLoad').textContent = '0';
+                document.getElementById('avgLoadSubtitle').textContent = '';
                 return;
             }
             
@@ -881,16 +893,19 @@
             const trucks = new Set(filteredData.map(item => item['Truck No']));
             const totalVolume = filteredData.reduce((sum, item) => sum + (Number(item.QTY) || 0), 0);
             const totalTrips = filteredData.length;
-            const avgVolume = totalTrips > 0 ? (totalVolume / totalTrips).toFixed(2) : 0;
+            const avgVolume = totalTrips > 0 ? (totalVolume / totalTrips) : 0;
             const avgLoad = avgVolume; // Assuming load is equivalent to volume
             
             // Update KPI cards
             document.getElementById('totalArea').textContent = areas.size;
             document.getElementById('totalPlant').textContent = plants.size;
-            document.getElementById('totalVolume').textContent = `${totalVolume} m³`;
-            document.getElementById('avgVolume').textContent = `${avgVolume} m³`;
+            document.getElementById('totalVolume').textContent = `${formatNumber(totalVolume)} m³`;
+            document.getElementById('totalVolumeSubtitle').textContent = `Sum kolom Qty: ${formatNumber(totalVolume)}`;
+            document.getElementById('avgVolume').textContent = `${formatNumber(avgVolume)} m³`;
+            document.getElementById('avgVolumeSubtitle').textContent = `Total Vol: ${formatNumber(totalVolume)} / Total Trip: ${totalTrips} / Total Plant: ${plants.size}`;
             document.getElementById('totalTruck').textContent = trucks.size;
-            document.getElementById('avgLoad').textContent = avgLoad;
+            document.getElementById('avgLoad').textContent = formatNumber(avgLoad);
+            document.getElementById('avgLoadSubtitle').textContent = `Sum kolom Qty: ${formatNumber(totalVolume)} / Total Trip: ${totalTrips}`;
         }
         
         // Function to update charts
@@ -943,10 +958,10 @@
             
             const plants = Object.keys(plantData);
             const plantVolumes = plants.map(plant => plantData[plant].total);
-            const plantAvgVolumes = plants.map(plant => (plantData[plant].total / plantData[plant].count).toFixed(2));
+            const plantAvgVolumes = plants.map(plant => (plantData[plant].total / plantData[plant].count));
             const avgDistancePerPlant = plants.map(plant => {
                 if (plantData[plant].distanceCount > 0) {
-                    return (plantData[plant].distance / plantData[plant].distanceCount).toFixed(2);
+                    return (plantData[plant].distance / plantData[plant].distanceCount);
                 }
                 return 0;
             });
@@ -963,7 +978,7 @@
             const trucks = Object.keys(truckData);
             const tripsPerTruck = trucks.map(truck => truckData[truck].count);
             const volumePerTruck = trucks.map(truck => truckData[truck].total);
-            const avgLoadPerTruck = trucks.map(truck => (truckData[truck].total / truckData[truck].count).toFixed(2));
+            const avgLoadPerTruck = trucks.map(truck => (truckData[truck].total / truckData[truck].count));
             
             // Group by sales
             const salesData = {};
@@ -1004,7 +1019,7 @@
             // Group by distance
             const distanceData = {};
             filteredData.forEach(item => {
-                const distance = item.Distance ? `${item.Distance} km` : 'Unknown';
+                const distance = item.Distance ? `${formatNumber(item.Distance)} km` : 'Unknown';
                 if (!distanceData[distance]) distanceData[distance] = 0;
                 distanceData[distance] += Number(item.QTY) || 0;
             });
@@ -1068,7 +1083,7 @@
                             weight: 'bold'
                         },
                         formatter: function(value) {
-                            return value;
+                            return formatNumber(value);
                         }
                     }
                 }
@@ -1461,7 +1476,7 @@
                 });
             }
             
-            // Volume per Customer Chart
+            // Volume per Customer Chart - Changed to bar chart
             if (data.customers.length > 0) {
                 const ctx = document.getElementById('volumePerCustomerChart').getContext('2d');
                 
@@ -1506,6 +1521,11 @@
             
             const d = new Date(date);
             return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+        
+        // Helper function to format numbers to 2 decimal places
+        function formatNumber(num) {
+            return Number(num).toFixed(2);
         }
     </script>
 </body>
