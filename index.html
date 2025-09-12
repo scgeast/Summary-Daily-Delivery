@@ -177,10 +177,17 @@
         
         .header-info {
             margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         
         .header-info div {
             margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
         }
         
         /* KPI Cards */
@@ -340,6 +347,11 @@
             .kpi-cards {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .header-info {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
         
         @media (max-width: 576px) {
@@ -477,6 +489,7 @@
                     <div id="lastUpdate">Last Update: <span id="updateTime"></span></div>
                     <div class="header-info">
                         <div id="periodRange">Periode: -</div>
+                        <div id="filterInfo">Filter: All Areas, All Plants, All Truck Types</div>
                     </div>
                 </div>
             </div>
@@ -989,6 +1002,9 @@
                 document.getElementById('dashboardTitle').textContent = `Dashboard Daily Delivery - ${selectedAreas.length} Areas`;
             }
             
+            // Update filter info
+            updateFilterInfo(selectedAreas, selectedPlants, selectedTruckTypes, allAreasSelected, allPlantsSelected, allTruckTypesSelected);
+            
             // Update period range
             document.getElementById('periodRange').textContent = `Periode: ${formatDate(startDate)} - ${formatDate(endDate)}`;
             
@@ -997,6 +1013,20 @@
             
             // Process the filtered data
             processData();
+        }
+        
+        // Function to update filter information
+        function updateFilterInfo(selectedAreas, selectedPlants, selectedTruckTypes, allAreasSelected, allPlantsSelected, allTruckTypesSelected) {
+            let areaInfo = allAreasSelected ? "All Areas" : 
+                (selectedAreas.length === 1 ? selectedAreas[0] : `${selectedAreas.length} Areas`);
+                
+            let plantInfo = allPlantsSelected ? "All Plants" : 
+                (selectedPlants.length === 1 ? selectedPlants[0] : `${selectedPlants.length} Plants`);
+                
+            let truckInfo = allTruckTypesSelected ? "All Truck Types" : 
+                (selectedTruckTypes.length === 1 ? selectedTruckTypes[0] : `${selectedTruckTypes.length} Truck Types`);
+                
+            document.getElementById('filterInfo').textContent = `Filter: ${areaInfo}, ${plantInfo}, ${truckInfo}`;
         }
         
         // Function to update KPIs
@@ -1160,15 +1190,18 @@
             const dates = Object.keys(dateData).sort();
             const dailyVolume = dates.map(date => dateData[date]);
             
-            // Group by distance
+            // Group by distance for Trend Volume per Distance
             const distanceData = {};
             filteredData.forEach(item => {
-                const distance = item.Distance ? `${formatNumber(item.Distance)} km` : 'Unknown';
-                if (!distanceData[distance]) distanceData[distance] = 0;
-                distanceData[distance] += Number(item.QTY) || 0;
+                if (item.Distance && item.QTY) {
+                    const distance = Math.round(Number(item.Distance));
+                    if (!distanceData[distance]) distanceData[distance] = 0;
+                    distanceData[distance] += Number(item.QTY) || 0;
+                }
             });
             
-            const distances = Object.keys(distanceData);
+            // Convert to arrays and sort by distance
+            const distances = Object.keys(distanceData).map(Number).sort((a, b) => a - b);
             const volumePerDistance = distances.map(distance => distanceData[distance]);
             
             return {
@@ -1538,17 +1571,26 @@
                 });
             }
             
-            // Volume per Distance Chart
+            // Trend Volume per Distance Chart
             if (data.distances.length > 0) {
                 const ctx = document.getElementById('volumePerDistanceChart').getContext('2d');
+                
+                // Sort distances and volumes together
+                const sortedData = data.distances.map((distance, index) => ({
+                    distance,
+                    volume: data.volumePerDistance[index]
+                })).sort((a, b) => a.distance - b.distance);
+                
+                const sortedDistances = sortedData.map(item => `${item.distance} km`);
+                const sortedVolumes = sortedData.map(item => item.volume);
                 
                 charts.volumePerDistance = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: data.distances,
+                        labels: sortedDistances,
                         datasets: [{
                             label: 'Volume (m³)',
-                            data: data.volumePerDistance,
+                            data: sortedVolumes,
                             backgroundColor: function(context) {
                                 const chart = context.chart;
                                 const {ctx, chartArea} = chart;
@@ -1620,7 +1662,7 @@
                 });
             }
             
-            // Volume per Customer Chart - Changed to bar chart
+            // Volume per Customer Chart - Changed to horizontal bar chart
             if (data.customers.length > 0) {
                 const ctx = document.getElementById('volumePerCustomerChart').getContext('2d');
                 
@@ -1643,7 +1685,7 @@
                     },
                     options: {
                         ...commonOptions,
-                        indexAxis: 'y',
+                        indexAxis: 'y', // This makes it horizontal
                         scales: {
                             x: {
                                 beginAtZero: true,
