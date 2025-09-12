@@ -443,6 +443,15 @@
                 </select>
             </div>
             
+            <div class="filter-group">
+                <h3><i class="fas fa-truck"></i> Truck Type</h3>
+                <select id="truckTypeFilter" multiple>
+                    <option value="All" selected>Select All</option>
+                    <option value="TM Big">TM Big</option>
+                    <option value="TM Mini">TM Mini</option>
+                </select>
+            </div>
+            
             <button id="applyFilters" style="width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
                 Apply Filters
             </button>
@@ -493,6 +502,7 @@
                 <div class="kpi-card">
                     <h3>Total Truck</h3>
                     <div class="value" id="totalTruck">0</div>
+                    <div class="subtitle" id="totalTruckSubtitle"></div>
                 </div>
                 <div class="kpi-card">
                     <h3>Avg Load/Trip</h3>
@@ -693,6 +703,7 @@
                         if (normalizedHeader.includes('qty') || normalizedHeader.includes('volume')) return 'QTY';
                         if (normalizedHeader.includes('endcustomer') || normalizedHeader.includes('customer')) return 'End Customer Name';
                         if (normalizedHeader.includes('truckno') || normalizedHeader.includes('tm') || normalizedHeader.includes('truck')) return 'Truck No';
+                        if (normalizedHeader.includes('trucktype') || normalizedHeader.includes('typetruck') || normalizedHeader.includes('typetm')) return 'Truck Type';
                         if (normalizedHeader.includes('salesman') || normalizedHeader.includes('sales')) return 'Sales Man';
                         if (normalizedHeader.includes('distance')) return 'Distance';
                         
@@ -843,14 +854,20 @@
             const selectedPlants = Array.from(selectedPlantOptions).map(option => option.value);
             const allPlantsSelected = selectedPlants.includes('All') || selectedPlants.length === 0;
             
+            // Get selected truck types
+            const selectedTruckTypeOptions = document.getElementById('truckTypeFilter').selectedOptions;
+            const selectedTruckTypes = Array.from(selectedTruckTypeOptions).map(option => option.value);
+            const allTruckTypesSelected = selectedTruckTypes.includes('All') || selectedTruckTypes.length === 0;
+            
             // Apply filters
             filteredData = rawData.filter(item => {
                 const itemDate = new Date(item['DP Date']);
                 const inDateRange = itemDate >= startDate && itemDate <= endDate;
                 const inSelectedArea = allAreasSelected || selectedAreas.includes(item.Area);
                 const inSelectedPlant = allPlantsSelected || selectedPlants.includes(item['Plant Name']);
+                const inSelectedTruckType = allTruckTypesSelected || selectedTruckTypes.includes(item['Truck Type']);
                 
-                return inDateRange && inSelectedArea && inSelectedPlant;
+                return inDateRange && inSelectedArea && inSelectedPlant && inSelectedTruckType;
             });
             
             // Update dashboard title based on area selection
@@ -882,6 +899,7 @@
                 document.getElementById('avgVolume').textContent = '0 m³';
                 document.getElementById('avgVolumeSubtitle').textContent = '';
                 document.getElementById('totalTruck').textContent = '0';
+                document.getElementById('totalTruckSubtitle').textContent = '';
                 document.getElementById('avgLoad').textContent = '0';
                 document.getElementById('avgLoadSubtitle').textContent = '';
                 return;
@@ -897,15 +915,31 @@
             const avgLoad = avgVolume; // Assuming load is equivalent to volume
             
             // Update KPI cards
-            document.getElementById('totalArea').textContent = areas.size;
-            document.getElementById('totalPlant').textContent = plants.size;
+            document.getElementById('totalArea').textContent = formatNumber(areas.size, 0);
+            document.getElementById('totalPlant').textContent = formatNumber(plants.size, 0);
             document.getElementById('totalVolume').textContent = `${formatNumber(totalVolume)} m³`;
             document.getElementById('totalVolumeSubtitle').textContent = `Sum kolom Qty: ${formatNumber(totalVolume)}`;
             document.getElementById('avgVolume').textContent = `${formatNumber(avgVolume)} m³`;
-            document.getElementById('avgVolumeSubtitle').textContent = `Total Vol: ${formatNumber(totalVolume)} / Total Trip: ${totalTrips} / Total Plant: ${plants.size}`;
-            document.getElementById('totalTruck').textContent = trucks.size;
+            document.getElementById('avgVolumeSubtitle').textContent = `Total Vol: ${formatNumber(totalVolume)} / Total Trip: ${formatNumber(totalTrips, 0)} / Total Plant: ${formatNumber(plants.size, 0)}`;
+            document.getElementById('totalTruck').textContent = formatNumber(trucks.size, 0);
+            document.getElementById('totalTruckSubtitle').textContent = `Truck Type: ${getSelectedTruckTypes()}`;
             document.getElementById('avgLoad').textContent = formatNumber(avgLoad);
-            document.getElementById('avgLoadSubtitle').textContent = `Sum kolom Qty: ${formatNumber(totalVolume)} / Total Trip: ${totalTrips}`;
+            document.getElementById('avgLoadSubtitle').textContent = `Sum kolom Qty: ${formatNumber(totalVolume)} / Total Trip: ${formatNumber(totalTrips, 0)}`;
+        }
+        
+        // Helper function to get selected truck types for subtitle
+        function getSelectedTruckTypes() {
+            const selectedTruckTypeOptions = document.getElementById('truckTypeFilter').selectedOptions;
+            const selectedTruckTypes = Array.from(selectedTruckTypeOptions).map(option => option.value);
+            const allTruckTypesSelected = selectedTruckTypes.includes('All') || selectedTruckTypes.length === 0;
+            
+            if (allTruckTypesSelected) {
+                return "All Types";
+            } else if (selectedTruckTypes.length === 1) {
+                return selectedTruckTypes[0];
+            } else {
+                return selectedTruckTypes.join(", ");
+            }
         }
         
         // Function to update charts
@@ -1523,9 +1557,21 @@
             return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         }
         
-        // Helper function to format numbers to 2 decimal places
-        function formatNumber(num) {
-            return Number(num).toFixed(2);
+        // Helper function to format numbers with thousand separators and optional decimals
+        function formatNumber(num, decimals = 2) {
+            if (num === null || num === undefined) return '0';
+            
+            // Convert to number if it's a string
+            num = typeof num === 'string' ? parseFloat(num) : num;
+            
+            // Check if it's a whole number
+            const isWholeNumber = num % 1 === 0;
+            
+            // Format with thousand separators
+            return num.toLocaleString('id-ID', {
+                minimumFractionDigits: isWholeNumber ? 0 : decimals,
+                maximumFractionDigits: isWholeNumber ? 0 : decimals
+            });
         }
     </script>
 </body>
