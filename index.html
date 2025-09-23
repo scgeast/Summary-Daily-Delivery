@@ -15,7 +15,6 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
         body {
             background-color: #f5f7f9;
             color: #333;
@@ -23,12 +22,10 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        
         .container {
             display: flex;
             flex: 1;
         }
-        
         /* Sidebar Filter */
         .sidebar {
             width: 300px;
@@ -40,12 +37,10 @@
             overflow-y: auto;
             position: relative;
         }
-        
         .sidebar.collapsed {
             transform: translateX(-250px);
             width: 50px;
         }
-        
         .sidebar-toggle {
             position: absolute;
             top: 15px;
@@ -63,11 +58,9 @@
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             z-index: 100;
         }
-        
         .filter-group {
             margin-bottom: 25px;
         }
-        
         .filter-group h3 {
             margin-bottom: 15px;
             font-size: 18px;
@@ -76,17 +69,14 @@
             display: flex;
             align-items: center;
         }
-        
         .filter-group h3 i {
             margin-right: 10px;
         }
-        
         .filter-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
         }
-        
         .filter-group input, .filter-group select {
             width: 100%;
             padding: 10px;
@@ -96,31 +86,26 @@
             background: white;
             color: #333;
         }
-        
         .filter-group select {
             height: 120px;
             overflow-y: auto;
         }
-        
         .toggle-options {
             background: rgba(255, 255, 255, 0.1);
             padding: 15px;
             border-radius: 5px;
             margin-bottom: 20px;
         }
-        
         .toggle-options label {
             display: flex;
             align-items: center;
             margin-bottom: 10px;
             cursor: pointer;
         }
-        
         .toggle-options input {
             margin-right: 10px;
             width: auto;
         }
-        
         /* File Upload */
         .file-upload {
             background: rgba(255, 255, 255, 0.1);
@@ -129,7 +114,6 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        
         .file-upload-btn {
             display: inline-block;
             padding: 10px 15px;
@@ -139,18 +123,15 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        
         .file-upload-btn:hover {
             background: #2980b9;
         }
-        
         /* Main Content */
         .main-content {
             flex: 1;
             padding: 20px;
             transition: all 0.3s ease;
         }
-        
         /* Header */
         .header {
             display: flex;
@@ -165,16 +146,13 @@
             text-align: center;
             position: relative;
         }
-        
         .header-content {
             text-align: center;
         }
-        
         .header h1 {
             font-size: 32px;
             margin-bottom: 10px;
         }
-        
         .header-info {
             margin-top: 10px;
             display: flex;
@@ -182,14 +160,12 @@
             gap: 20px;
             flex-wrap: wrap;
         }
-        
         .header-info div {
             margin-bottom: 5px;
             background: rgba(255, 255, 255, 0.2);
             padding: 5px 10px;
             border-radius: 5px;
         }
-        
         /* KPI Cards */
         .kpi-cards {
             display: grid;
@@ -197,7 +173,6 @@
             gap: 20px;
             margin-bottom: 30px;
         }
-        
         .kpi-card {
             background: white;
             padding: 20px;
@@ -206,30 +181,25 @@
             text-align: center;
             transition: transform 0.3s ease;
         }
-        
         .kpi-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
-        
         .kpi-card h3 {
             font-size: 16px;
             color: #7f8c8d;
             margin-bottom: 10px;
         }
-        
         .kpi-card .value {
             font-size: 28px;
             font-weight: bold;
             color: #2c3e50;
         }
-        
         .kpi-card .subtitle {
             font-size: 12px;
             color: #95a5a6;
             margin-top: 5px;
         }
-        
         /* Tabs */
         .tabs {
             display: flex;
@@ -239,7 +209,6 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
-        
         .tab {
             padding: 15px 25px;
             cursor: pointer;
@@ -254,25 +223,20 @@
             flex: 1;
             justify-content: center;
         }
-        
         .tab i {
             margin-right: 8px;
         }
-        
         .tab.active {
             background: #3498db;
             color: white;
         }
-        
         /* Charts */
         .tab-content {
             display: none;
         }
-        
         .tab-content.active {
             display: block;
         }
-        
         .chart-container {
             background: white;
             padding: 20px;
@@ -280,7 +244,6 @@
             margin-bottom: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
-        
         .chart-title {
             font-size: 18px;
             color: #2c3e50;
@@ -290,17 +253,14 @@
             display: flex;
             align-items: center;
         }
-        
         .chart-title i {
             margin-right: 10px;
             color: #3498db;
         }
-        
         .chart-wrapper {
             position: relative;
             height: 350px;
         }
-        
         .section-title {
             font-size: 20px;
             color: #2c3e50;
@@ -310,12 +270,10 @@
             display: flex;
             align-items: center;
         }
-        
         .section-title i {
             margin-right: 10px;
             color: #3498db;
         }
-        
         /* Footer */
         .footer {
             text-align: center;
@@ -325,53 +283,43 @@
             font-size: 14px;
             border-top: 1px solid #ddd;
         }
-        
         /* Responsive */
         @media (max-width: 992px) {
             .container {
                 flex-direction: column;
             }
-            
             .sidebar {
                 width: 100%;
                 height: auto;
             }
-            
             .sidebar.collapsed {
                 transform: translateX(0);
                 width: 100%;
                 height: 60px;
                 overflow: hidden;
             }
-            
             .kpi-cards {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
             .header-info {
                 flex-direction: column;
                 gap: 10px;
             }
         }
-        
         @media (max-width: 576px) {
             .kpi-cards {
                 grid-template-columns: 1fr;
             }
-            
             .header {
                 padding: 15px;
             }
-            
             .header h1 {
                 font-size: 24px;
             }
-            
             .tabs {
                 flex-direction: column;
             }
         }
-        
         /* Loading Spinner */
         .spinner {
             border: 5px solid #f3f3f3;
@@ -383,29 +331,24 @@
             margin: 20px auto;
             display: none;
         }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
         /* Empty State */
         .empty-state {
             text-align: center;
             padding: 40px;
             color: #7f8c8d;
         }
-        
         .empty-state i {
             font-size: 48px;
             margin-bottom: 15px;
             color: #bdc3c7;
         }
-        
         .empty-state p {
             font-size: 18px;
         }
-        
         /* Debug Info */
         .debug-info {
             background: #fff3cd;
@@ -425,7 +368,6 @@
             <button class="sidebar-toggle" id="sidebarToggle">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            
             <div class="toggle-options">
                 <h3><i class="fas fa-toggle-on"></i> Tampilan Chart</h3>
                 <label>
@@ -433,7 +375,6 @@
                     Tampilkan Data Labels
                 </label>
             </div>
-            
             <div class="file-upload">
                 <h3><i class="fas fa-file-excel"></i> Upload File Excel</h3>
                 <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;">
@@ -442,30 +383,25 @@
                 </label>
                 <div id="fileName" style="margin-top: 10px; font-size: 12px;"></div>
             </div>
-            
             <div class="filter-group">
                 <h3><i class="fas fa-calendar-alt"></i> Date Range</h3>
                 <label for="startDate">Start Date</label>
                 <input type="date" id="startDate">
-                
                 <label for="endDate">End Date</label>
                 <input type="date" id="endDate">
             </div>
-            
             <div class="filter-group">
                 <h3><i class="fas fa-map-marker-alt"></i> Area</h3>
                 <select id="areaFilter" multiple>
                     <option value="All" selected>Select All</option>
                 </select>
             </div>
-            
             <div class="filter-group">
                 <h3><i class="fas fa-industry"></i> Plant Name</h3>
                 <select id="plantFilter" multiple>
                     <option value="All" selected>Select All</option>
                 </select>
             </div>
-            
             <div class="filter-group">
                 <h3><i class="fas fa-truck"></i> Truck Type</h3>
                 <select id="truckTypeFilter" multiple>
@@ -474,12 +410,10 @@
                     <option value="TM Mini">TM Mini</option>
                 </select>
             </div>
-            
             <button id="applyFilters" style="width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
                 Apply Filters
             </button>
         </div>
-        
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
             <!-- Header -->
@@ -493,19 +427,15 @@
                     </div>
                 </div>
             </div>
-            
             <!-- Loading Spinner -->
             <div class="spinner" id="loadingSpinner"></div>
-            
             <!-- Debug Info -->
             <div class="debug-info" id="debugInfo"></div>
-            
             <!-- Empty State (shown initially) -->
             <div class="empty-state" id="emptyState">
                 <i class="fas fa-file-excel"></i>
                 <p>Upload file Excel untuk memulai analisis data</p>
             </div>
-            
             <!-- KPI Cards (hidden initially) -->
             <div class="kpi-cards" id="kpiCards" style="display: none;">
                 <div class="kpi-card">
@@ -537,7 +467,6 @@
                     <div class="subtitle" id="avgLoadSubtitle"></div>
                 </div>
             </div>
-            
             <!-- Tabs (hidden initially) -->
             <div class="tabs" id="tabs" style="display: none;">
                 <button class="tab active" data-tab="logistics">
@@ -547,74 +476,62 @@
                     <i class="fas fa-chart-line"></i> SALES & CUSTOMER
                 </button>
             </div>
-            
             <!-- Logistics Tab -->
             <div class="tab-content active" id="logistics">
                 <!-- Delivery Section -->
                 <h2 class="section-title"><i class="fas fa-shipping-fast"></i> Delivery</h2>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Volume per Area</h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerAreaChart"></canvas>
                     </div>
                 </div>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Volume per Plant</h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerPlantChart"></canvas>
                     </div>
                 </div>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-chart-line"></i> Average Volume per Plant</h3>
                     <div class="chart-wrapper">
                         <canvas id="avgVolumePerPlantChart"></canvas>
                     </div>
                 </div>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-chart-line"></i> Trend Volume Harian per Plant</h3>
                     <div class="chart-wrapper">
                         <canvas id="dailyTrendChart"></canvas>
                     </div>
                 </div>
-                
                 <!-- Utilisasi TM Section -->
                 <h2 class="section-title"><i class="fas fa-truck-loading"></i> Utilisasi TM</h2>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Trip per TM</h3>
                     <div class="chart-wrapper">
                         <canvas id="tripPerTruckChart"></canvas>
                     </div>
                 </div>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Volume per TM</h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerTruckChart"></canvas>
                     </div>
                 </div>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-chart-line"></i> Average Load per TM</h3>
                     <div class="chart-wrapper">
                         <canvas id="avgLoadPerTruckChart"></canvas>
                     </div>
                 </div>
-                
                 <!-- Distance Section -->
                 <h2 class="section-title"><i class="fas fa-route"></i> Distance</h2>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-chart-line"></i> Average Distance per Plant</h3>
                     <div class="chart-wrapper">
                         <canvas id="avgDistancePerPlantChart"></canvas>
                     </div>
                 </div>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-chart-line"></i> Trend Volume per Distance</h3>
                     <div class="chart-wrapper">
@@ -622,7 +539,6 @@
                     </div>
                 </div>
             </div>
-            
             <!-- Sales & Customer Tab -->
             <div class="tab-content" id="sales">
                 <div class="chart-container">
@@ -631,7 +547,6 @@
                         <canvas id="volumePerSalesChart"></canvas>
                     </div>
                 </div>
-                
                 <div class="chart-container">
                     <h3 class="chart-title"><i class="fas fa-users"></i> Top 30 Customers by Volume</h3>
                     <div class="chart-wrapper">
@@ -641,21 +556,17 @@
             </div>
         </div>
     </div>
-
     <footer class="footer">
         Dashboard Daily Delivery by L=23-52Xe
     </footer>
-
     <script>
         // Global variables
         let rawData = [];
         let filteredData = [];
         let charts = {};
         let showDataLabels = true;
-        
         // Set last update time
         document.getElementById('updateTime').textContent = new Date().toLocaleString();
-        
         // Set up event listeners
         document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
@@ -666,7 +577,6 @@
                 updateCharts();
             }
         });
-        
         // Set up tab switching
         const tabs = document.querySelectorAll('.tab');
         tabs.forEach(tab => {
@@ -674,20 +584,16 @@
                 // Remove active class from all tabs and contents
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
                 // Add active class to clicked tab and corresponding content
                 this.classList.add('active');
                 document.getElementById(this.dataset.tab).classList.add('active');
             });
         });
-        
         // Function to toggle sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const icon = this.querySelector('i');
-            
             sidebar.classList.toggle('collapsed');
-            
             if (sidebar.classList.contains('collapsed')) {
                 icon.classList.remove('fa-chevron-left');
                 icon.classList.add('fa-chevron-right');
@@ -696,37 +602,28 @@
                 icon.classList.add('fa-chevron-left');
             }
         }
-        
         // Function to handle file upload
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-            
             document.getElementById('fileName').textContent = file.name;
             document.getElementById('loadingSpinner').style.display = 'block';
             document.getElementById('emptyState').style.display = 'none';
-            
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
-                    
                     // Get first worksheet
                     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                    
                     // Convert to JSON with header mapping
                     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    
                     // Debug file structure
                     debugFileStructure(jsonData);
-                    
                     // Extract headers and map them
                     const headers = jsonData[0].map(header => {
                         if (!header) return 'Unknown';
-                        
                         const normalizedHeader = header.toString().toLowerCase().replace(/\s+/g, '');
-                        
                         // Map headers to our expected format
                         if (normalizedHeader.includes('dpno') || normalizedHeader.includes('trip') || normalizedHeader.includes('ritase')) return 'DP No';
                         if (normalizedHeader.includes('dpdate') || normalizedHeader.includes('deliverydate') || normalizedHeader.includes('tanggal')) return 'DP Date';
@@ -739,10 +636,8 @@
                         if (normalizedHeader.includes('salesman') || normalizedHeader.includes('sales') || normalizedHeader.includes('salesman')) return 'Sales Man';
                         if (normalizedHeader.includes('distance') || normalizedHeader.includes('jarak')) return 'Distance';
                         if (normalizedHeader.includes('zone') || normalizedHeader.includes('zona')) return 'Zone';
-                        
                         return header;
                     });
-                    
                     // Convert data rows to objects
                     const dataRows = jsonData.slice(1);
                     rawData = dataRows.map((row, index) => {
@@ -758,30 +653,25 @@
                             } else if (header === 'QTY' && row[i] !== undefined && row[i] !== null) {
                                 // Handle various QTY formats
                                 let qtyValue = row[i];
-                                
                                 // If it's a string, clean it up
                                 if (typeof qtyValue === 'string') {
                                     // Remove any non-numeric characters except decimal points and commas
                                     qtyValue = qtyValue.toString().replace(/[^\d.,-]/g, '');
-                                    
                                     // Handle negative values
                                     const isNegative = qtyValue.includes('-');
                                     if (isNegative) {
                                         qtyValue = qtyValue.replace('-', '');
                                     }
-                                    
                                     // Replace comma with dot for decimal values
                                     if (qtyValue.includes(',')) {
                                         qtyValue = qtyValue.replace(',', '.');
                                     }
-                                    
                                     // Convert to number and apply negative sign if needed
                                     qtyValue = parseFloat(qtyValue) || 0;
                                     if (isNegative) {
                                         qtyValue = -qtyValue;
                                     }
                                 }
-                                
                                 // Convert to number
                                 obj[header] = parseFloat(qtyValue) || 0;
                             } else {
@@ -790,7 +680,6 @@
                         });
                         return obj;
                     }).filter(item => item['DP No']); // Filter out empty rows
-                    
                     // Validate data and show issues
                     const issues = validateData(rawData);
                     if (issues.length > 0) {
@@ -801,13 +690,10 @@
                             ${issues.length > 5 ? '<br>... and ' + (issues.length - 5) + ' more issues' : ''}
                         `;
                     }
-                    
                     // Update date filters based on data
                     updateDateFilters();
-                    
                     filteredData = [...rawData];
                     processData();
-                    
                 } catch (error) {
                     console.error('Error processing file:', error);
                     alert('Error processing file. Please make sure it is a valid Excel file with the correct format.');
@@ -816,16 +702,13 @@
                     document.getElementById('loadingSpinner').style.display = 'none';
                 }
             };
-            
             reader.readAsArrayBuffer(file);
         }
-        
         // Function to debug file structure
         function debugFileStructure(jsonData) {
             console.log("File structure debug:");
             console.log("Number of rows:", jsonData.length);
             console.log("Headers:", jsonData[0]);
-            
             // Check QTY column index
             const headers = jsonData[0];
             const qtyIndex = headers.findIndex(header => {
@@ -833,7 +716,6 @@
                 const normalizedHeader = header.toString().toLowerCase().replace(/\s+/g, '');
                 return normalizedHeader.includes('qty') || normalizedHeader.includes('volume') || normalizedHeader.includes('p5');
             });
-            
             console.log("QTY column index:", qtyIndex);
             if (qtyIndex !== -1) {
                 console.log("Sample QTY values:");
@@ -842,13 +724,11 @@
                 }
             }
         }
-        
         // Function to validate data and show issues
         function validateData(data) {
             const issues = [];
             let totalVolume = 0;
             let validRecords = 0;
-            
             data.forEach((item, index) => {
                 if (item['QTY'] === undefined || item['QTY'] === null) {
                     issues.push(`Row ${index + 2}: QTY is missing`);
@@ -861,19 +741,15 @@
                     validRecords++;
                 }
             });
-            
             if (issues.length > 0) {
                 console.warn('Data validation issues:', issues);
             }
-            
             console.log(`Data validation: ${validRecords} valid records, total volume: ${formatNumber(totalVolume)}`);
             return issues;
         }
-        
         // Function to update date filters based on data
         function updateDateFilters() {
             if (rawData.length === 0) return;
-            
             // Get min and max dates from data
             const dates = rawData.map(item => {
                 if (item['DP Date'] instanceof Date) {
@@ -883,20 +759,15 @@
                 }
                 return null;
             }).filter(date => date instanceof Date && !isNaN(date));
-            
             if (dates.length === 0) return;
-            
             const minDate = new Date(Math.min.apply(null, dates));
             const maxDate = new Date(Math.max.apply(null, dates));
-            
             // Set date filter values
             document.getElementById('startDate').valueAsDate = minDate;
             document.getElementById('endDate').valueAsDate = maxDate;
-            
             // Update period display
             document.getElementById('periodRange').textContent = `Periode: ${formatDate(minDate)} - ${formatDate(maxDate)}`;
         }
-        
         // Function to process data and update dashboard
         function processData() {
             if (filteredData.length === 0) {
@@ -905,39 +776,32 @@
                 document.getElementById('tabs').style.display = 'none';
                 return;
             }
-            
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('kpiCards').style.display = 'grid';
             document.getElementById('tabs').style.display = 'flex';
-            
             updateFilters();
             updateKPIs();
             updateCharts();
         }
-        
         // Function to update filters based on data
         function updateFilters() {
             // Get unique areas and plants
             const areas = [...new Set(filteredData.map(item => item.Area))].filter(Boolean);
             const plants = [...new Set(filteredData.map(item => item['Plant Name']))].filter(Boolean);
-            
             // Update area filter
             const areaFilter = document.getElementById('areaFilter');
             areaFilter.innerHTML = '<option value="All" selected>Select All</option>';
             areas.forEach(area => {
                 areaFilter.innerHTML += `<option value="${area}">${area}</option>`;
             });
-            
             // Update plant filter based on selected area
             updatePlantFilter();
         }
-        
         // Function to update plant filter based on selected area
         function updatePlantFilter() {
             const areaFilter = document.getElementById('areaFilter');
             const selectedAreas = Array.from(areaFilter.selectedOptions).map(option => option.value);
             const allAreasSelected = selectedAreas.includes('All') || selectedAreas.length === 0;
-            
             // Get plants based on selected areas
             let plants = [];
             if (allAreasSelected) {
@@ -947,7 +811,6 @@
                     .filter(item => selectedAreas.includes(item.Area))
                     .map(item => item['Plant Name']))].filter(Boolean);
             }
-            
             // Update plant filter
             const plantFilter = document.getElementById('plantFilter');
             plantFilter.innerHTML = '<option value="All" selected>Select All</option>';
@@ -955,33 +818,27 @@
                 plantFilter.innerHTML += `<option value="${plant}">${plant}</option>`;
             });
         }
-        
         // Event listener for area filter change
         document.getElementById('areaFilter').addEventListener('change', function() {
             updatePlantFilter();
         });
-        
         // Function to apply filters
         function applyFilters() {
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
             endDate.setHours(23, 59, 59); // Include entire end date
-            
             // Get selected areas
             const selectedAreaOptions = document.getElementById('areaFilter').selectedOptions;
             const selectedAreas = Array.from(selectedAreaOptions).map(option => option.value);
             const allAreasSelected = selectedAreas.includes('All') || selectedAreas.length === 0;
-            
             // Get selected plants
             const selectedPlantOptions = document.getElementById('plantFilter').selectedOptions;
             const selectedPlants = Array.from(selectedPlantOptions).map(option => option.value);
             const allPlantsSelected = selectedPlants.includes('All') || selectedPlants.length === 0;
-            
             // Get selected truck types
             const selectedTruckTypeOptions = document.getElementById('truckTypeFilter').selectedOptions;
             const selectedTruckTypes = Array.from(selectedTruckTypeOptions).map(option => option.value);
             const allTruckTypesSelected = selectedTruckTypes.includes('All') || selectedTruckTypes.length === 0;
-            
             // Apply filters
             filteredData = rawData.filter(item => {
                 const itemDate = new Date(item['DP Date']);
@@ -989,10 +846,8 @@
                 const inSelectedArea = allAreasSelected || selectedAreas.includes(item.Area);
                 const inSelectedPlant = allPlantsSelected || selectedPlants.includes(item['Plant Name']);
                 const inSelectedTruckType = allTruckTypesSelected || selectedTruckTypes.includes(item['Truck Type']);
-                
                 return inDateRange && inSelectedArea && inSelectedPlant && inSelectedTruckType;
             });
-            
             // Update dashboard title based on area selection
             if (allAreasSelected) {
                 document.getElementById('dashboardTitle').textContent = 'Dashboard Daily Delivery - All Area';
@@ -1001,34 +856,25 @@
             } else {
                 document.getElementById('dashboardTitle').textContent = `Dashboard Daily Delivery - ${selectedAreas.length} Areas`;
             }
-            
             // Update filter info
             updateFilterInfo(selectedAreas, selectedPlants, selectedTruckTypes, allAreasSelected, allPlantsSelected, allTruckTypesSelected);
-            
             // Update period range
             document.getElementById('periodRange').textContent = `Periode: ${formatDate(startDate)} - ${formatDate(endDate)}`;
-            
             // Update last update time
             document.getElementById('updateTime').textContent = new Date().toLocaleString();
-            
             // Process the filtered data
             processData();
         }
-        
         // Function to update filter information
         function updateFilterInfo(selectedAreas, selectedPlants, selectedTruckTypes, allAreasSelected, allPlantsSelected, allTruckTypesSelected) {
             let areaInfo = allAreasSelected ? "All Areas" : 
                 (selectedAreas.length === 1 ? selectedAreas[0] : `${selectedAreas.length} Areas`);
-                
             let plantInfo = allPlantsSelected ? "All Plants" : 
                 (selectedPlants.length === 1 ? selectedPlants[0] : `${selectedPlants.length} Plants`);
-                
             let truckInfo = allTruckTypesSelected ? "All Truck Types" : 
                 (selectedTruckTypes.length === 1 ? selectedTruckTypes[0] : `${selectedTruckTypes.length} Truck Types`);
-                
             document.getElementById('filterInfo').textContent = `Filter: ${areaInfo}, ${plantInfo}, ${truckInfo}`;
         }
-        
         // Function to update KPIs
         function updateKPIs() {
             if (filteredData.length === 0) {
@@ -1044,7 +890,6 @@
                 document.getElementById('avgLoadSubtitle').textContent = '';
                 return;
             }
-            
             // Calculate KPIs
             const areas = new Set(filteredData.map(item => item.Area));
             const plants = new Set(filteredData.map(item => item['Plant Name']));
@@ -1053,7 +898,6 @@
             const totalTrips = filteredData.length;
             const avgVolume = totalTrips > 0 ? (totalVolume / totalTrips) : 0;
             const avgLoad = avgVolume; // Assuming load is equivalent to volume
-            
             // Update KPI cards
             document.getElementById('totalArea').textContent = formatNumber(areas.size, 0);
             document.getElementById('totalPlant').textContent = formatNumber(plants.size, 0);
@@ -1066,13 +910,11 @@
             document.getElementById('avgLoad').textContent = formatNumber(avgLoad);
             document.getElementById('avgLoadSubtitle').textContent = `Sum kolom Qty: ${formatNumber(totalVolume)} / Total Trip: ${formatNumber(totalTrips, 0)}`;
         }
-        
         // Helper function to get selected truck types for subtitle
         function getSelectedTruckTypes() {
             const selectedTruckTypeOptions = document.getElementById('truckTypeFilter').selectedOptions;
             const selectedTruckTypes = Array.from(selectedTruckTypeOptions).map(option => option.value);
             const allTruckTypesSelected = selectedTruckTypes.includes('All') || selectedTruckTypes.length === 0;
-            
             if (allTruckTypesSelected) {
                 return "All Types";
             } else if (selectedTruckTypes.length === 1) {
@@ -1081,16 +923,13 @@
                 return selectedTruckTypes.join(", ");
             }
         }
-        
         // Function to update charts
         function updateCharts() {
             // Calculate data for charts
             const chartData = calculateChartData();
-            
             // Initialize or update charts
             initCharts(chartData);
         }
-        
         // Function to calculate data for charts
         function calculateChartData() {
             if (filteredData.length === 0) {
@@ -1101,9 +940,20 @@
                     dates: [], dailyVolume: [], distances: [], volumePerDistance: [], avgDistancePerPlant: []
                 };
             }
-            
+
+            // --- PERBAIKAN: HITUNG JUMLAH HARI UNIK ---
+            const uniqueDates = new Set(
+                filteredData
+                    .map(item => {
+                        const date = new Date(item['DP Date']);
+                        return date instanceof Date && !isNaN(date) ? date.toDateString() : null;
+                    })
+                    .filter(dateString => dateString !== null)
+            );
+            const totalUniqueDays = uniqueDates.size || 1; // Hindari pembagian dengan nol
+            // --- AKHIR PERBAIKAN ---
+
             // Calculate actual data from filteredData
-            
             // Group by area
             const areaData = {};
             filteredData.forEach(item => {
@@ -1112,10 +962,9 @@
                 areaData[area].total += Number(item.QTY) || 0;
                 areaData[area].count += 1;
             });
-            
             const areas = Object.keys(areaData);
             const volumes = areas.map(area => areaData[area].total);
-            
+
             // Group by plant
             const plantData = {};
             filteredData.forEach(item => {
@@ -1123,23 +972,25 @@
                 if (!plantData[plant]) plantData[plant] = { total: 0, count: 0, distance: 0, distanceCount: 0 };
                 plantData[plant].total += Number(item.QTY) || 0;
                 plantData[plant].count += 1;
-                
                 if (item.Distance) {
                     plantData[plant].distance += Number(item.Distance) || 0;
                     plantData[plant].distanceCount += 1;
                 }
             });
-            
             const plants = Object.keys(plantData);
             const plantVolumes = plants.map(plant => plantData[plant].total);
-            const plantAvgVolumes = plants.map(plant => (plantData[plant].total / plantData[plant].count));
+
+            // --- PERBAIKAN: GUNAKAN totalUniqueDays sebagai pembagi ---
+            const plantAvgVolumes = plants.map(plant => (plantData[plant].total / totalUniqueDays));
+            // --- AKHIR PERBAIKAN ---
+
             const avgDistancePerPlant = plants.map(plant => {
                 if (plantData[plant].distanceCount > 0) {
                     return (plantData[plant].distance / plantData[plant].distanceCount);
                 }
                 return 0;
             });
-            
+
             // Group by truck
             const truckData = {};
             filteredData.forEach(item => {
@@ -1148,12 +999,11 @@
                 truckData[truck].total += Number(item.QTY) || 0;
                 truckData[truck].count += 1;
             });
-            
             const trucks = Object.keys(truckData);
             const tripsPerTruck = trucks.map(truck => truckData[truck].count);
             const volumePerTruck = trucks.map(truck => truckData[truck].total);
             const avgLoadPerTruck = trucks.map(truck => (truckData[truck].total / truckData[truck].count));
-            
+
             // Group by sales
             const salesData = {};
             filteredData.forEach(item => {
@@ -1161,10 +1011,9 @@
                 if (!salesData[sales]) salesData[sales] = 0;
                 salesData[sales] += Number(item.QTY) || 0;
             });
-            
             const sales = Object.keys(salesData);
             const salesVolume = sales.map(salesPerson => salesData[salesPerson]);
-            
+
             // Group by customer
             const customerData = {};
             filteredData.forEach(item => {
@@ -1172,13 +1021,12 @@
                 if (!customerData[customer]) customerData[customer] = 0;
                 customerData[customer] += Number(item.QTY) || 0;
             });
-            
             // Get top 30 customers
             const customers = Object.keys(customerData)
                 .sort((a, b) => customerData[b] - customerData[a])
                 .slice(0, 30);
             const customerVolume = customers.map(customer => customerData[customer]);
-            
+
             // Group by date
             const dateData = {};
             filteredData.forEach(item => {
@@ -1186,10 +1034,9 @@
                 if (!dateData[date]) dateData[date] = 0;
                 dateData[date] += Number(item.QTY) || 0;
             });
-            
             const dates = Object.keys(dateData).sort();
             const dailyVolume = dates.map(date => dateData[date]);
-            
+
             // Group by distance for Trend Volume per Distance
             const distanceData = {};
             filteredData.forEach(item => {
@@ -1199,11 +1046,10 @@
                     distanceData[distance] += Number(item.QTY) || 0;
                 }
             });
-            
             // Convert to arrays and sort by distance
             const distances = Object.keys(distanceData).map(Number).sort((a, b) => a - b);
             const volumePerDistance = distances.map(distance => distanceData[distance]);
-            
+
             return {
                 areas, volumes, 
                 plants, plantVolumes, plantAvgVolumes, avgDistancePerPlant,
@@ -1212,7 +1058,6 @@
                 dates, dailyVolume, distances, volumePerDistance
             };
         }
-        
         // Function to create gradient for chart
         function createGradient(ctx, area, colors) {
             const gradient = ctx.createLinearGradient(0, area.bottom, 0, area.top);
@@ -1220,18 +1065,16 @@
             gradient.addColorStop(1, colors[1]);
             return gradient;
         }
-        
         // Function to initialize charts with highlight for highest value
         function initCharts(data) {
             // Destroy existing charts if they exist
             Object.values(charts).forEach(chart => {
                 if (chart) chart.destroy();
             });
-            
+
             // Helper function to generate background colors with highlight for max value
             function getHighlightColors(values, ctx, chartArea) {
                 if (values.length === 0) return [];
-                
                 const maxValue = Math.max(...values);
                 return values.map(value => {
                     if (value === maxValue) {
@@ -1241,13 +1084,13 @@
                     }
                 });
             }
-            
+
             // Helper function to generate gradient colors
             function getGradientColors(values, ctx, chartArea, colors) {
                 if (values.length === 0) return [];
                 return values.map(() => createGradient(ctx, chartArea, colors));
             }
-            
+
             // Common options for all charts
             const commonOptions = {
                 responsive: true,
@@ -1265,12 +1108,11 @@
                     }
                 }
             };
-            
+
             // Volume per Area Chart
             if (data.areas.length > 0) {
                 const ctx = document.getElementById('volumePerAreaChart').getContext('2d');
                 const chartArea = ctx.chartArea;
-                
                 charts.volumePerArea = new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -1303,11 +1145,10 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Volume per Plant Chart
             if (data.plants.length > 0) {
                 const ctx = document.getElementById('volumePerPlantChart').getContext('2d');
-                
                 charts.volumePerPlant = new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -1340,11 +1181,10 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Average Volume per Plant Chart
             if (data.plants.length > 0) {
                 const ctx = document.getElementById('avgVolumePerPlantChart').getContext('2d');
-                
                 charts.avgVolumePerPlant = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1379,11 +1219,10 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Daily Trend Chart
             if (data.dates.length > 0) {
                 const ctx = document.getElementById('dailyTrendChart').getContext('2d');
-                
                 charts.dailyTrend = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1418,11 +1257,10 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Trip per Truck Chart
             if (data.trucks.length > 0) {
                 const ctx = document.getElementById('tripPerTruckChart').getContext('2d');
-                
                 charts.tripPerTruck = new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -1455,11 +1293,10 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Volume per Truck Chart
             if (data.trucks.length > 0) {
                 const ctx = document.getElementById('volumePerTruckChart').getContext('2d');
-                
                 charts.volumePerTruck = new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -1492,11 +1329,10 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Average Load per Truck Chart
             if (data.trucks.length > 0) {
                 const ctx = document.getElementById('avgLoadPerTruckChart').getContext('2d');
-                
                 charts.avgLoadPerTruck = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1531,11 +1367,10 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Average Distance per Plant Chart
             if (data.plants.length > 0) {
                 const ctx = document.getElementById('avgDistancePerPlantChart').getContext('2d');
-                
                 charts.avgDistancePerPlant = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1570,20 +1405,17 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Trend Volume per Distance Chart
             if (data.distances.length > 0) {
                 const ctx = document.getElementById('volumePerDistanceChart').getContext('2d');
-                
                 // Sort distances and volumes together
                 const sortedData = data.distances.map((distance, index) => ({
                     distance,
                     volume: data.volumePerDistance[index]
                 })).sort((a, b) => a.distance - b.distance);
-                
                 const sortedDistances = sortedData.map(item => `${item.distance} km`);
                 const sortedVolumes = sortedData.map(item => item.volume);
-                
                 charts.volumePerDistance = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1624,11 +1456,10 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Volume per Sales Chart
             if (data.sales.length > 0) {
                 const ctx = document.getElementById('volumePerSalesChart').getContext('2d');
-                
                 charts.volumePerSales = new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -1661,11 +1492,10 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            
+
             // Volume per Customer Chart - Changed to horizontal bar chart
             if (data.customers.length > 0) {
                 const ctx = document.getElementById('volumePerCustomerChart').getContext('2d');
-                
                 charts.volumePerCustomer = new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -1700,25 +1530,21 @@
                 });
             }
         }
-        
+
         // Helper function to format date
         function formatDate(date) {
             if (!date) return '';
-            
             const d = new Date(date);
             return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         }
-        
+
         // Helper function to format numbers with thousand separators and optional decimals
         function formatNumber(num, decimals = 2) {
             if (num === null || num === undefined || isNaN(num)) return '0';
-            
             // Convert to number if it's a string
             num = typeof num === 'string' ? parseFloat(num) : num;
-            
             // Check if it's a whole number
             const isWholeNumber = num % 1 === 0;
-            
             // Format with thousand separators
             return num.toLocaleString('id-ID', {
                 minimumFractionDigits: isWholeNumber ? 0 : decimals,
