@@ -498,12 +498,6 @@
                         <canvas id="avgVolumePerPlantChart"></canvas>
                     </div>
                 </div>
-                <div class="chart-container">
-                    <h3 class="chart-title"><i class="fas fa-chart-line"></i> Trend Volume Harian per Plant</h3>
-                    <div class="chart-wrapper">
-                        <canvas id="dailyTrendChart"></canvas>
-                    </div>
-                </div>
                 <!-- Utilisasi TM Section -->
                 <h2 class="section-title"><i class="fas fa-truck-loading"></i> Utilisasi TM</h2>
                 <div class="chart-container">
@@ -937,7 +931,8 @@
                     areas: [], plants: [], volumes: [], avgVolumes: [],
                     trucks: [], tripsPerTruck: [], volumePerTruck: [], avgLoadPerTruck: [],
                     sales: [], salesVolume: [], customers: [], customerVolume: [],
-                    dates: [], dailyVolume: [], distances: [], volumePerDistance: [], avgDistancePerPlant: []
+                    // --- PERBAIKAN: Hapus properti `dates` dan `dailyVolume` ---
+                    distances: [], volumePerDistance: [], avgDistancePerPlant: []
                 };
             }
 
@@ -1027,16 +1022,6 @@
                 .slice(0, 30);
             const customerVolume = customers.map(customer => customerData[customer]);
 
-            // Group by date
-            const dateData = {};
-            filteredData.forEach(item => {
-                const date = formatDate(item['DP Date']);
-                if (!dateData[date]) dateData[date] = 0;
-                dateData[date] += Number(item.QTY) || 0;
-            });
-            const dates = Object.keys(dateData).sort();
-            const dailyVolume = dates.map(date => dateData[date]);
-
             // Group by distance for Trend Volume per Distance
             const distanceData = {};
             filteredData.forEach(item => {
@@ -1051,11 +1036,12 @@
             const volumePerDistance = distances.map(distance => distanceData[distance]);
 
             return {
-                areas, volumes, 
+                areas, volumes,
                 plants, plantVolumes, plantAvgVolumes, avgDistancePerPlant,
                 trucks, tripsPerTruck, volumePerTruck, avgLoadPerTruck,
                 sales, salesVolume, customers, customerVolume,
-                dates, dailyVolume, distances, volumePerDistance
+                // --- PERBAIKAN: Hapus `dates` dan `dailyVolume` dari return ---
+                distances, volumePerDistance
             };
         }
         // Function to create gradient for chart
@@ -1071,7 +1057,6 @@
             Object.values(charts).forEach(chart => {
                 if (chart) chart.destroy();
             });
-
             // Helper function to generate background colors with highlight for max value
             function getHighlightColors(values, ctx, chartArea) {
                 if (values.length === 0) return [];
@@ -1084,13 +1069,11 @@
                     }
                 });
             }
-
             // Helper function to generate gradient colors
             function getGradientColors(values, ctx, chartArea, colors) {
                 if (values.length === 0) return [];
                 return values.map(() => createGradient(ctx, chartArea, colors));
             }
-
             // Common options for all charts
             const commonOptions = {
                 responsive: true,
@@ -1108,7 +1091,6 @@
                     }
                 }
             };
-
             // Volume per Area Chart
             if (data.areas.length > 0) {
                 const ctx = document.getElementById('volumePerAreaChart').getContext('2d');
@@ -1145,7 +1127,6 @@
                     plugins: [ChartDataLabels]
                 });
             }
-
             // Volume per Plant Chart
             if (data.plants.length > 0) {
                 const ctx = document.getElementById('volumePerPlantChart').getContext('2d');
@@ -1181,7 +1162,6 @@
                     plugins: [ChartDataLabels]
                 });
             }
-
             // Average Volume per Plant Chart
             if (data.plants.length > 0) {
                 const ctx = document.getElementById('avgVolumePerPlantChart').getContext('2d');
@@ -1219,44 +1199,9 @@
                     plugins: [ChartDataLabels]
                 });
             }
-
-            // Daily Trend Chart
-            if (data.dates.length > 0) {
-                const ctx = document.getElementById('dailyTrendChart').getContext('2d');
-                charts.dailyTrend = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: data.dates,
-                        datasets: [{
-                            label: 'Volume (m³)',
-                            data: data.dailyVolume,
-                            backgroundColor: function(context) {
-                                const chart = context.chart;
-                                const {ctx, chartArea} = chart;
-                                if (!chartArea) return null;
-                                return createGradient(ctx, chartArea, ['rgba(52, 152, 219, 0.2)', 'rgba(52, 152, 219, 0.6)']);
-                            },
-                            borderColor: '#3498db',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        ...commonOptions,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Volume (m³)'
-                                }
-                            }
-                        }
-                    },
-                    plugins: [ChartDataLabels]
-                });
-            }
+            // --- PERBAIKAN: HAPUS BAGIAN INI ---
+            // Daily Trend Chart (dihapus sepenuhnya)
+            // --- AKHIR PERBAIKAN ---
 
             // Trip per Truck Chart
             if (data.trucks.length > 0) {
@@ -1293,7 +1238,6 @@
                     plugins: [ChartDataLabels]
                 });
             }
-
             // Volume per Truck Chart
             if (data.trucks.length > 0) {
                 const ctx = document.getElementById('volumePerTruckChart').getContext('2d');
@@ -1329,7 +1273,6 @@
                     plugins: [ChartDataLabels]
                 });
             }
-
             // Average Load per Truck Chart
             if (data.trucks.length > 0) {
                 const ctx = document.getElementById('avgLoadPerTruckChart').getContext('2d');
@@ -1367,7 +1310,6 @@
                     plugins: [ChartDataLabels]
                 });
             }
-
             // Average Distance per Plant Chart
             if (data.plants.length > 0) {
                 const ctx = document.getElementById('avgDistancePerPlantChart').getContext('2d');
@@ -1405,7 +1347,6 @@
                     plugins: [ChartDataLabels]
                 });
             }
-
             // Trend Volume per Distance Chart
             if (data.distances.length > 0) {
                 const ctx = document.getElementById('volumePerDistanceChart').getContext('2d');
@@ -1456,7 +1397,6 @@
                     plugins: [ChartDataLabels]
                 });
             }
-
             // Volume per Sales Chart
             if (data.sales.length > 0) {
                 const ctx = document.getElementById('volumePerSalesChart').getContext('2d');
@@ -1492,7 +1432,6 @@
                     plugins: [ChartDataLabels]
                 });
             }
-
             // Volume per Customer Chart - Changed to horizontal bar chart
             if (data.customers.length > 0) {
                 const ctx = document.getElementById('volumePerCustomerChart').getContext('2d');
@@ -1530,14 +1469,12 @@
                 });
             }
         }
-
         // Helper function to format date
         function formatDate(date) {
             if (!date) return '';
             const d = new Date(date);
             return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         }
-
         // Helper function to format numbers with thousand separators and optional decimals
         function formatNumber(num, decimals = 2) {
             if (num === null || num === undefined || isNaN(num)) return '0';
