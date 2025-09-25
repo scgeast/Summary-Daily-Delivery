@@ -1228,23 +1228,9 @@
         }
         
         // Function to update chart visibility based on filter selection
-        function updateChartVisibility(allAreasSelected, allPlantsSelected) {
-            const volumePerAreaContainer = document.getElementById('volumePerAreaContainer');
-            const volumePerPlantContainer = document.getElementById('volumePerPlantContainer');
-            
-            // Show/hide Volume per Area chart
-            if (allAreasSelected) {
-                volumePerAreaContainer.style.display = 'block';
-            } else {
-                volumePerAreaContainer.style.display = 'none';
-            }
-            
-            // Show/hide Volume per Plant chart
-            if (allPlantsSelected) {
-                volumePerPlantContainer.style.display = 'block';
-            } else {
-                volumePerPlantContainer.style.display = 'none';
-            }
+        function updateChartVisibility() {
+            document.getElementById('volumePerAreaContainer').style.display = 'block';
+            document.getElementById('volumePerPlantContainer').style.display = 'block';
         }
         
         // Function to update filter information
