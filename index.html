@@ -1212,8 +1212,12 @@
             // Show/hide charts based on filter selection
             updateChartVisibility(allAreasSelected, allPlantsSelected);
             
-            // Process the filtered data
-            processData();
+            // Ensure KPI cards are visible
+            document.getElementById('kpiCards').style.display = 'grid';
+            
+            // Update KPIs and charts with filtered data
+            updateKPIs();
+            updateCharts();
         }
         
         // Function to update chart visibility based on filter selection
@@ -1267,7 +1271,7 @@
                 return;
             }
             
-            // Calculate KPIs
+            // Calculate KPIs based on filtered data
             const areas = new Set(filteredData.map(item => item.Area));
             const plants = new Set(filteredData.map(item => item['Plant Name']));
             const trucks = new Set(filteredData.map(item => item['Truck No']));
