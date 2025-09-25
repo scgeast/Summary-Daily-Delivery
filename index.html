@@ -77,7 +77,7 @@
             margin-bottom: 8px;
             font-weight: 500;
         }
-        .filter-group input, .filter-group select {
+        .filter-group input {
             width: 100%;
             padding: 10px;
             border-radius: 5px;
@@ -86,25 +86,59 @@
             background: white;
             color: #333;
         }
-        .filter-group select {
-            height: 120px;
-            overflow-y: auto;
-        }
-        .toggle-options {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .toggle-options label {
-            display: flex;
-            align-items: center;
+        /* Custom Dropdown Styles */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
             margin-bottom: 10px;
-            cursor: pointer;
         }
-        .toggle-options input {
-            margin-right: 10px;
-            width: auto;
+        .dropdown-selected {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dropdown-selected i {
+            color: #7f8c8d;
+        }
+        .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .dropdown-options.show {
+            display: block;
+        }
+        .dropdown-option {
+            padding: 10px;
+            cursor: pointer;
+            color: #333;
+            border-bottom: 1px solid #eee;
+        }
+        .dropdown-option:hover {
+            background: #f8f9fa;
+        }
+        .dropdown-option:last-child {
+            border-bottom: none;
+        }
+        .dropdown-option.selected {
+            background: #e3f2fd;
+            font-weight: bold;
         }
         /* File Upload */
         .file-upload {
@@ -366,15 +400,8 @@
         <!-- Sidebar Filter -->
         <div class="sidebar" id="sidebar">
             <button class="sidebar-toggle" id="sidebarToggle">
-                <i class="fas fa-chevron-left"></i>
+                <i class="fas fa-bars"></i>
             </button>
-            <div class="toggle-options">
-                <h3><i class="fas fa-toggle-on"></i> Tampilan Chart</h3>
-                <label>
-                    <input type="checkbox" id="dataLabelsToggle" checked>
-                    Tampilkan Data Labels
-                </label>
-            </div>
             <div class="file-upload">
                 <h3><i class="fas fa-file-excel"></i> Upload File Excel</h3>
                 <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;">
@@ -392,23 +419,48 @@
             </div>
             <div class="filter-group">
                 <h3><i class="fas fa-map-marker-alt"></i> Area</h3>
-                <select id="areaFilter" multiple>
-                    <option value="All" selected>Select All</option>
-                </select>
+                <div class="custom-dropdown" id="areaDropdown">
+                    <div class="dropdown-selected">
+                        <span>Select All</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-options">
+                        <div class="dropdown-option selected" value="All">Select All</div>
+                    </div>
+                </div>
             </div>
             <div class="filter-group">
                 <h3><i class="fas fa-industry"></i> Plant Name</h3>
-                <select id="plantFilter" multiple>
-                    <option value="All" selected>Select All</option>
-                </select>
+                <div class="custom-dropdown" id="plantDropdown">
+                    <div class="dropdown-selected">
+                        <span>Select All</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-options">
+                        <div class="dropdown-option selected" value="All">Select All</div>
+                    </div>
+                </div>
             </div>
             <div class="filter-group">
                 <h3><i class="fas fa-truck"></i> Truck Type</h3>
-                <select id="truckTypeFilter" multiple>
-                    <option value="All" selected>Select All</option>
-                    <option value="TM Big">TM Big</option>
-                    <option value="TM Mini">TM Mini</option>
-                </select>
+                <div class="custom-dropdown" id="truckTypeDropdown">
+                    <div class="dropdown-selected">
+                        <span>Select All</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-options">
+                        <div class="dropdown-option selected" value="All">Select All</div>
+                        <div class="dropdown-option" value="TM Big">TM Big</div>
+                        <div class="dropdown-option" value="TM Mini">TM Mini</div>
+                    </div>
+                </div>
+            </div>
+            <div class="toggle-options">
+                <h3><i class="fas fa-toggle-on"></i> Tampilan Chart</h3>
+                <label>
+                    <input type="checkbox" id="dataLabelsToggle" checked>
+                    Tampilkan Data Labels
+                </label>
             </div>
             <button id="applyFilters" style="width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
                 Apply Filters
@@ -480,13 +532,13 @@
             <div class="tab-content active" id="logistics">
                 <!-- Delivery Section -->
                 <h2 class="section-title"><i class="fas fa-shipping-fast"></i> Delivery</h2>
-                <div class="chart-container">
+                <div class="chart-container" id="volumePerAreaContainer">
                     <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Volume per Area</h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerAreaChart"></canvas>
                     </div>
                 </div>
-                <div class="chart-container">
+                <div class="chart-container" id="volumePerPlantContainer">
                     <h3 class="chart-title"><i class="fas fa-chart-bar"></i> Total Volume per Plant</h3>
                     <div class="chart-wrapper">
                         <canvas id="volumePerPlantChart"></canvas>
@@ -559,8 +611,10 @@
         let filteredData = [];
         let charts = {};
         let showDataLabels = true;
+        
         // Set last update time
         document.getElementById('updateTime').textContent = new Date().toLocaleString();
+        
         // Set up event listeners
         document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
@@ -571,6 +625,12 @@
                 updateCharts();
             }
         });
+        
+        // Set up dropdown functionality
+        setupDropdown('areaDropdown');
+        setupDropdown('plantDropdown');
+        setupDropdown('truckTypeDropdown');
+        
         // Set up tab switching
         const tabs = document.querySelectorAll('.tab');
         tabs.forEach(tab => {
@@ -578,46 +638,122 @@
                 // Remove active class from all tabs and contents
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
                 // Add active class to clicked tab and corresponding content
                 this.classList.add('active');
                 document.getElementById(this.dataset.tab).classList.add('active');
             });
         });
+        
+        // Function to set up dropdown
+        function setupDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const selected = dropdown.querySelector('.dropdown-selected');
+            const options = dropdown.querySelector('.dropdown-options');
+            
+            selected.addEventListener('click', function() {
+                options.classList.toggle('show');
+                
+                // Close other dropdowns
+                document.querySelectorAll('.dropdown-options').forEach(opt => {
+                    if (opt !== options) {
+                        opt.classList.remove('show');
+                    }
+                });
+            });
+            
+            // Handle option selection
+            options.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dropdown-option')) {
+                    const value = e.target.getAttribute('value');
+                    const text = e.target.textContent;
+                    
+                    // Toggle selection
+                    if (value === 'All') {
+                        // If "All" is clicked, select only "All"
+                        options.querySelectorAll('.dropdown-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        e.target.classList.add('selected');
+                        selected.querySelector('span').textContent = text;
+                    } else {
+                        // If a specific option is clicked, deselect "All"
+                        const allOption = options.querySelector('.dropdown-option[value="All"]');
+                        if (allOption) {
+                            allOption.classList.remove('selected');
+                        }
+                        
+                        // Toggle selection of the clicked option
+                        e.target.classList.toggle('selected');
+                        
+                        // Update the selected text
+                        const selectedOptions = options.querySelectorAll('.dropdown-option.selected:not([value="All"])');
+                        if (selectedOptions.length === 0) {
+                            // If no specific options are selected, select "All"
+                            if (allOption) {
+                                allOption.classList.add('selected');
+                                selected.querySelector('span').textContent = allOption.textContent;
+                            }
+                        } else if (selectedOptions.length === 1) {
+                            selected.querySelector('span').textContent = selectedOptions[0].textContent;
+                        } else {
+                            selected.querySelector('span').textContent = `${selectedOptions.length} items selected`;
+                        }
+                    }
+                    
+                    // If area dropdown changes, update plant dropdown
+                    if (dropdownId === 'areaDropdown') {
+                        updatePlantFilter();
+                    }
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    options.classList.remove('show');
+                }
+            });
+        }
+        
         // Function to toggle sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const icon = this.querySelector('i');
             sidebar.classList.toggle('collapsed');
-            if (sidebar.classList.contains('collapsed')) {
-                icon.classList.remove('fa-chevron-left');
-                icon.classList.add('fa-chevron-right');
-            } else {
-                icon.classList.remove('fa-chevron-right');
-                icon.classList.add('fa-chevron-left');
-            }
+            
+            // Icon doesn't change, we keep the hamburger icon
         }
+        
         // Function to handle file upload
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
+            
             document.getElementById('fileName').textContent = file.name;
             document.getElementById('loadingSpinner').style.display = 'block';
             document.getElementById('emptyState').style.display = 'none';
+            
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
+                    
                     // Get first worksheet
                     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    
                     // Convert to JSON with header mapping
                     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
                     // Debug file structure
                     debugFileStructure(jsonData);
+                    
                     // Extract headers and map them
                     const headers = jsonData[0].map(header => {
                         if (!header) return 'Unknown';
                         const normalizedHeader = header.toString().toLowerCase().replace(/\s+/g, '');
+                        
                         // Map headers to our expected format
                         if (normalizedHeader.includes('dpno') || normalizedHeader.includes('trip') || normalizedHeader.includes('ritase')) return 'DP No';
                         if (normalizedHeader.includes('dpdate') || normalizedHeader.includes('deliverydate') || normalizedHeader.includes('tanggal')) return 'DP Date';
@@ -630,8 +766,10 @@
                         if (normalizedHeader.includes('salesman') || normalizedHeader.includes('sales') || normalizedHeader.includes('salesman')) return 'Sales Man';
                         if (normalizedHeader.includes('distance') || normalizedHeader.includes('jarak')) return 'Distance';
                         if (normalizedHeader.includes('zone') || normalizedHeader.includes('zona')) return 'Zone';
+                        
                         return header;
                     });
+                    
                     // Convert data rows to objects
                     const dataRows = jsonData.slice(1);
                     rawData = dataRows.map((row, index) => {
@@ -647,25 +785,30 @@
                             } else if (header === 'QTY' && row[i] !== undefined && row[i] !== null) {
                                 // Handle various QTY formats
                                 let qtyValue = row[i];
+                                
                                 // If it's a string, clean it up
                                 if (typeof qtyValue === 'string') {
                                     // Remove any non-numeric characters except decimal points and commas
                                     qtyValue = qtyValue.toString().replace(/[^\d.,-]/g, '');
+                                    
                                     // Handle negative values
                                     const isNegative = qtyValue.includes('-');
                                     if (isNegative) {
                                         qtyValue = qtyValue.replace('-', '');
                                     }
+                                    
                                     // Replace comma with dot for decimal values
                                     if (qtyValue.includes(',')) {
                                         qtyValue = qtyValue.replace(',', '.');
                                     }
+                                    
                                     // Convert to number and apply negative sign if needed
                                     qtyValue = parseFloat(qtyValue) || 0;
                                     if (isNegative) {
                                         qtyValue = -qtyValue;
                                     }
                                 }
+                                
                                 // Convert to number
                                 obj[header] = parseFloat(qtyValue) || 0;
                             } else {
@@ -674,6 +817,7 @@
                         });
                         return obj;
                     }).filter(item => item['DP No']); // Filter out empty rows
+                    
                     // Validate data and show issues
                     const issues = validateData(rawData);
                     if (issues.length > 0) {
@@ -684,6 +828,7 @@
                             ${issues.length > 5 ? '<br>... and ' + (issues.length - 5) + ' more issues' : ''}
                         `;
                     }
+                    
                     // Update date filters based on data
                     updateDateFilters();
                     filteredData = [...rawData];
@@ -696,13 +841,16 @@
                     document.getElementById('loadingSpinner').style.display = 'none';
                 }
             };
+            
             reader.readAsArrayBuffer(file);
         }
+        
         // Function to debug file structure
         function debugFileStructure(jsonData) {
             console.log("File structure debug:");
             console.log("Number of rows:", jsonData.length);
             console.log("Headers:", jsonData[0]);
+            
             // Check QTY column index
             const headers = jsonData[0];
             const qtyIndex = headers.findIndex(header => {
@@ -710,7 +858,9 @@
                 const normalizedHeader = header.toString().toLowerCase().replace(/\s+/g, '');
                 return normalizedHeader.includes('qty') || normalizedHeader.includes('volume') || normalizedHeader.includes('p5');
             });
+            
             console.log("QTY column index:", qtyIndex);
+            
             if (qtyIndex !== -1) {
                 console.log("Sample QTY values:");
                 for (let i = 1; i < Math.min(6, jsonData.length); i++) {
@@ -718,11 +868,13 @@
                 }
             }
         }
+        
         // Function to validate data and show issues
         function validateData(data) {
             const issues = [];
             let totalVolume = 0;
             let validRecords = 0;
+            
             data.forEach((item, index) => {
                 if (item['QTY'] === undefined || item['QTY'] === null) {
                     issues.push(`Row ${index + 2}: QTY is missing`);
@@ -735,15 +887,19 @@
                     validRecords++;
                 }
             });
+            
             if (issues.length > 0) {
                 console.warn('Data validation issues:', issues);
             }
+            
             console.log(`Data validation: ${validRecords} valid records, total volume: ${formatNumber(totalVolume)}`);
             return issues;
         }
+        
         // Function to update date filters based on data
         function updateDateFilters() {
             if (rawData.length === 0) return;
+            
             // Get min and max dates from data
             const dates = rawData.map(item => {
                 if (item['DP Date'] instanceof Date) {
@@ -753,15 +909,20 @@
                 }
                 return null;
             }).filter(date => date instanceof Date && !isNaN(date));
+            
             if (dates.length === 0) return;
+            
             const minDate = new Date(Math.min.apply(null, dates));
             const maxDate = new Date(Math.max.apply(null, dates));
+            
             // Set date filter values
             document.getElementById('startDate').valueAsDate = minDate;
             document.getElementById('endDate').valueAsDate = maxDate;
+            
             // Update period display
             document.getElementById('periodRange').textContent = `Periode: ${formatDate(minDate)} - ${formatDate(maxDate)}`;
         }
+        
         // Function to process data and update dashboard
         function processData() {
             if (filteredData.length === 0) {
@@ -770,69 +931,200 @@
                 document.getElementById('tabs').style.display = 'none';
                 return;
             }
+            
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('kpiCards').style.display = 'grid';
             document.getElementById('tabs').style.display = 'flex';
+            
             updateFilters();
             updateKPIs();
             updateCharts();
         }
+        
         // Function to update filters based on data
         function updateFilters() {
             // Get unique areas and plants
-            const areas = [...new Set(filteredData.map(item => item.Area))].filter(Boolean);
-            const plants = [...new Set(filteredData.map(item => item['Plant Name']))].filter(Boolean);
+            const areas = [...new Set(rawData.map(item => item.Area))].filter(Boolean);
+            const plants = [...new Set(rawData.map(item => item['Plant Name']))].filter(Boolean);
+            
             // Update area filter
-            const areaFilter = document.getElementById('areaFilter');
-            areaFilter.innerHTML = '<option value="All" selected>Select All</option>';
+            const areaOptions = document.querySelector('#areaDropdown .dropdown-options');
+            areaOptions.innerHTML = '<div class="dropdown-option selected" value="All">Select All</div>';
             areas.forEach(area => {
-                areaFilter.innerHTML += `<option value="${area}">${area}</option>`;
+                areaOptions.innerHTML += `<div class="dropdown-option" value="${area}">${area}</div>`;
             });
-            // Update plant filter based on selected area
-            updatePlantFilter();
+            
+            // Update plant filter with all plants initially
+            const plantOptions = document.querySelector('#plantDropdown .dropdown-options');
+            plantOptions.innerHTML = '<div class="dropdown-option selected" value="All">Select All</div>';
+            plants.forEach(plant => {
+                plantOptions.innerHTML += `<div class="dropdown-option" value="${plant}">${plant}</div>`;
+            });
+            
+            // Re-attach event listeners to area options
+            const areaDropdown = document.getElementById('areaDropdown');
+            const newAreaOptions = areaDropdown.querySelector('.dropdown-options');
+            
+            newAreaOptions.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dropdown-option')) {
+                    const value = e.target.getAttribute('value');
+                    const text = e.target.textContent;
+                    
+                    // Toggle selection
+                    if (value === 'All') {
+                        // If "All" is clicked, select only "All"
+                        newAreaOptions.querySelectorAll('.dropdown-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        e.target.classList.add('selected');
+                        areaDropdown.querySelector('.dropdown-selected span').textContent = text;
+                    } else {
+                        // If a specific option is clicked, deselect "All"
+                        const allOption = newAreaOptions.querySelector('.dropdown-option[value="All"]');
+                        if (allOption) {
+                            allOption.classList.remove('selected');
+                        }
+                        
+                        // Toggle selection of the clicked option
+                        e.target.classList.toggle('selected');
+                        
+                        // Update the selected text
+                        const selectedOptions = newAreaOptions.querySelectorAll('.dropdown-option.selected:not([value="All"])');
+                        if (selectedOptions.length === 0) {
+                            // If no specific options are selected, select "All"
+                            if (allOption) {
+                                allOption.classList.add('selected');
+                                areaDropdown.querySelector('.dropdown-selected span').textContent = allOption.textContent;
+                            }
+                        } else if (selectedOptions.length === 1) {
+                            areaDropdown.querySelector('.dropdown-selected span').textContent = selectedOptions[0].textContent;
+                        } else {
+                            areaDropdown.querySelector('.dropdown-selected span').textContent = `${selectedOptions.length} items selected`;
+                        }
+                    }
+                    
+                    // Update plant filter when area selection changes
+                    updatePlantFilter();
+                }
+            });
         }
+        
         // Function to update plant filter based on selected area
         function updatePlantFilter() {
-            const areaFilter = document.getElementById('areaFilter');
-            const selectedAreas = Array.from(areaFilter.selectedOptions).map(option => option.value);
+            const areaOptions = document.querySelector('#areaDropdown .dropdown-options');
+            const selectedAreas = Array.from(areaOptions.querySelectorAll('.dropdown-option.selected'))
+                .map(option => option.value);
             const allAreasSelected = selectedAreas.includes('All') || selectedAreas.length === 0;
+            
             // Get plants based on selected areas
             let plants = [];
             if (allAreasSelected) {
-                plants = [...new Set(filteredData.map(item => item['Plant Name']))].filter(Boolean);
+                plants = [...new Set(rawData.map(item => item['Plant Name']))].filter(Boolean);
             } else {
-                plants = [...new Set(filteredData
+                plants = [...new Set(rawData
                     .filter(item => selectedAreas.includes(item.Area))
                     .map(item => item['Plant Name']))].filter(Boolean);
             }
+            
             // Update plant filter
-            const plantFilter = document.getElementById('plantFilter');
-            plantFilter.innerHTML = '<option value="All" selected>Select All</option>';
+            const plantOptions = document.querySelector('#plantDropdown .dropdown-options');
+            const plantSelected = document.querySelector('#plantDropdown .dropdown-selected span');
+            
+            // Save current selection
+            const currentSelections = Array.from(plantOptions.querySelectorAll('.dropdown-option.selected'))
+                .map(option => option.value);
+            
+            // Clear and rebuild options
+            plantOptions.innerHTML = '<div class="dropdown-option selected" value="All">Select All</div>';
             plants.forEach(plant => {
-                plantFilter.innerHTML += `<option value="${plant}">${plant}</option>`;
+                const isSelected = currentSelections.includes(plant);
+                plantOptions.innerHTML += `<div class="dropdown-option ${isSelected ? 'selected' : ''}" value="${plant}">${plant}</div>`;
+            });
+            
+            // Update the selected text
+            if (currentSelections.includes('All') || currentSelections.length === 0) {
+                plantSelected.textContent = 'Select All';
+            } else if (currentSelections.length === 1 && !currentSelections.includes('All')) {
+                plantSelected.textContent = currentSelections[0];
+            } else if (currentSelections.length > 1) {
+                // Filter out "All" if it was selected
+                const filteredSelections = currentSelections.filter(sel => sel !== 'All');
+                if (filteredSelections.length > 0) {
+                    plantSelected.textContent = `${filteredSelections.length} items selected`;
+                } else {
+                    plantSelected.textContent = 'Select All';
+                }
+            }
+            
+            // Re-attach event listeners to the new options
+            const plantDropdown = document.getElementById('plantDropdown');
+            const newPlantOptions = plantDropdown.querySelector('.dropdown-options');
+            
+            newPlantOptions.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dropdown-option')) {
+                    const value = e.target.getAttribute('value');
+                    const text = e.target.textContent;
+                    
+                    // Toggle selection
+                    if (value === 'All') {
+                        // If "All" is clicked, select only "All"
+                        newPlantOptions.querySelectorAll('.dropdown-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        e.target.classList.add('selected');
+                        plantSelected.textContent = text;
+                    } else {
+                        // If a specific option is clicked, deselect "All"
+                        const allOption = newPlantOptions.querySelector('.dropdown-option[value="All"]');
+                        if (allOption) {
+                            allOption.classList.remove('selected');
+                        }
+                        
+                        // Toggle selection of the clicked option
+                        e.target.classList.toggle('selected');
+                        
+                        // Update the selected text
+                        const selectedOptions = newPlantOptions.querySelectorAll('.dropdown-option.selected:not([value="All"])');
+                        if (selectedOptions.length === 0) {
+                            // If no specific options are selected, select "All"
+                            if (allOption) {
+                                allOption.classList.add('selected');
+                                plantSelected.textContent = allOption.textContent;
+                            }
+                        } else if (selectedOptions.length === 1) {
+                            plantSelected.textContent = selectedOptions[0].textContent;
+                        } else {
+                            plantSelected.textContent = `${selectedOptions.length} items selected`;
+                        }
+                    }
+                }
             });
         }
-        // Event listener for area filter change
-        document.getElementById('areaFilter').addEventListener('change', function() {
-            updatePlantFilter();
-        });
+        
         // Function to apply filters
         function applyFilters() {
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
             endDate.setHours(23, 59, 59); // Include entire end date
+            
             // Get selected areas
-            const selectedAreaOptions = document.getElementById('areaFilter').selectedOptions;
-            const selectedAreas = Array.from(selectedAreaOptions).map(option => option.value);
+            const areaOptions = document.querySelector('#areaDropdown .dropdown-options');
+            const selectedAreas = Array.from(areaOptions.querySelectorAll('.dropdown-option.selected'))
+                .map(option => option.value);
             const allAreasSelected = selectedAreas.includes('All') || selectedAreas.length === 0;
+            
             // Get selected plants
-            const selectedPlantOptions = document.getElementById('plantFilter').selectedOptions;
-            const selectedPlants = Array.from(selectedPlantOptions).map(option => option.value);
+            const plantOptions = document.querySelector('#plantDropdown .dropdown-options');
+            const selectedPlants = Array.from(plantOptions.querySelectorAll('.dropdown-option.selected'))
+                .map(option => option.value);
             const allPlantsSelected = selectedPlants.includes('All') || selectedPlants.length === 0;
+            
             // Get selected truck types
-            const selectedTruckTypeOptions = document.getElementById('truckTypeFilter').selectedOptions;
-            const selectedTruckTypes = Array.from(selectedTruckTypeOptions).map(option => option.value);
+            const truckTypeOptions = document.querySelector('#truckTypeDropdown .dropdown-options');
+            const selectedTruckTypes = Array.from(truckTypeOptions.querySelectorAll('.dropdown-option.selected'))
+                .map(option => option.value);
             const allTruckTypesSelected = selectedTruckTypes.includes('All') || selectedTruckTypes.length === 0;
+            
             // Apply filters
             filteredData = rawData.filter(item => {
                 const itemDate = new Date(item['DP Date']);
@@ -840,8 +1132,10 @@
                 const inSelectedArea = allAreasSelected || selectedAreas.includes(item.Area);
                 const inSelectedPlant = allPlantsSelected || selectedPlants.includes(item['Plant Name']);
                 const inSelectedTruckType = allTruckTypesSelected || selectedTruckTypes.includes(item['Truck Type']);
+                
                 return inDateRange && inSelectedArea && inSelectedPlant && inSelectedTruckType;
             });
+            
             // Update dashboard title based on area selection
             if (allAreasSelected) {
                 document.getElementById('dashboardTitle').textContent = 'Dashboard Daily Delivery - All Area';
@@ -850,15 +1144,43 @@
             } else {
                 document.getElementById('dashboardTitle').textContent = `Dashboard Daily Delivery - ${selectedAreas.length} Areas`;
             }
+            
             // Update filter info
             updateFilterInfo(selectedAreas, selectedPlants, selectedTruckTypes, allAreasSelected, allPlantsSelected, allTruckTypesSelected);
+            
             // Update period range
             document.getElementById('periodRange').textContent = `Periode: ${formatDate(startDate)} - ${formatDate(endDate)}`;
+            
             // Update last update time
             document.getElementById('updateTime').textContent = new Date().toLocaleString();
+            
+            // Show/hide charts based on filter selection
+            updateChartVisibility(allAreasSelected, allPlantsSelected);
+            
             // Process the filtered data
             processData();
         }
+        
+        // Function to update chart visibility based on filter selection
+        function updateChartVisibility(allAreasSelected, allPlantsSelected) {
+            const volumePerAreaContainer = document.getElementById('volumePerAreaContainer');
+            const volumePerPlantContainer = document.getElementById('volumePerPlantContainer');
+            
+            // Show/hide Volume per Area chart
+            if (allAreasSelected) {
+                volumePerAreaContainer.style.display = 'block';
+            } else {
+                volumePerAreaContainer.style.display = 'none';
+            }
+            
+            // Show/hide Volume per Plant chart
+            if (allPlantsSelected) {
+                volumePerPlantContainer.style.display = 'block';
+            } else {
+                volumePerPlantContainer.style.display = 'none';
+            }
+        }
+        
         // Function to update filter information
         function updateFilterInfo(selectedAreas, selectedPlants, selectedTruckTypes, allAreasSelected, allPlantsSelected, allTruckTypesSelected) {
             let areaInfo = allAreasSelected ? "All Areas" : 
@@ -867,8 +1189,10 @@
                 (selectedPlants.length === 1 ? selectedPlants[0] : `${selectedPlants.length} Plants`);
             let truckInfo = allTruckTypesSelected ? "All Truck Types" : 
                 (selectedTruckTypes.length === 1 ? selectedTruckTypes[0] : `${selectedTruckTypes.length} Truck Types`);
+            
             document.getElementById('filterInfo').textContent = `Filter: ${areaInfo}, ${plantInfo}, ${truckInfo}`;
         }
+        
         // Function to update KPIs
         function updateKPIs() {
             if (filteredData.length === 0) {
@@ -884,6 +1208,7 @@
                 document.getElementById('avgLoadSubtitle').textContent = '';
                 return;
             }
+            
             // Calculate KPIs
             const areas = new Set(filteredData.map(item => item.Area));
             const plants = new Set(filteredData.map(item => item['Plant Name']));
@@ -892,6 +1217,7 @@
             const totalTrips = filteredData.length;
             const avgVolume = totalTrips > 0 ? (totalVolume / totalTrips) : 0;
             const avgLoad = avgVolume; // Assuming load is equivalent to volume
+            
             // Update KPI cards
             document.getElementById('totalArea').textContent = formatNumber(areas.size, 0);
             document.getElementById('totalPlant').textContent = formatNumber(plants.size, 0);
@@ -904,11 +1230,14 @@
             document.getElementById('avgLoad').textContent = formatNumber(avgLoad);
             document.getElementById('avgLoadSubtitle').textContent = `Sum kolom Qty: ${formatNumber(totalVolume)} / Total Trip: ${formatNumber(totalTrips, 0)}`;
         }
+        
         // Helper function to get selected truck types for subtitle
         function getSelectedTruckTypes() {
-            const selectedTruckTypeOptions = document.getElementById('truckTypeFilter').selectedOptions;
-            const selectedTruckTypes = Array.from(selectedTruckTypeOptions).map(option => option.value);
+            const truckTypeOptions = document.querySelector('#truckTypeDropdown .dropdown-options');
+            const selectedTruckTypes = Array.from(truckTypeOptions.querySelectorAll('.dropdown-option.selected'))
+                .map(option => option.value);
             const allTruckTypesSelected = selectedTruckTypes.includes('All') || selectedTruckTypes.length === 0;
+            
             if (allTruckTypesSelected) {
                 return "All Types";
             } else if (selectedTruckTypes.length === 1) {
@@ -917,13 +1246,16 @@
                 return selectedTruckTypes.join(", ");
             }
         }
+        
         // Function to update charts
         function updateCharts() {
             // Calculate data for charts
             const chartData = calculateChartData();
+            
             // Initialize or update charts
             initCharts(chartData);
         }
+        
         // Function to calculate data for charts
         function calculateChartData() {
             if (filteredData.length === 0) {
@@ -931,22 +1263,9 @@
                     areas: [], plants: [], volumes: [], avgVolumes: [],
                     trucks: [], tripsPerTruck: [], volumePerTruck: [], avgLoadPerTruck: [],
                     sales: [], salesVolume: [], customers: [], customerVolume: [],
-                    // --- PERBAIKAN: Hapus properti `dates` dan `dailyVolume` ---
                     distances: [], volumePerDistance: [], avgDistancePerPlant: []
                 };
             }
-
-            // --- PERBAIKAN: HITUNG JUMLAH HARI UNIK ---
-            const uniqueDates = new Set(
-                filteredData
-                    .map(item => {
-                        const date = new Date(item['DP Date']);
-                        return date instanceof Date && !isNaN(date) ? date.toDateString() : null;
-                    })
-                    .filter(dateString => dateString !== null)
-            );
-            const totalUniqueDays = uniqueDates.size || 1; // Hindari pembagian dengan nol
-            // --- AKHIR PERBAIKAN ---
 
             // Calculate actual data from filteredData
             // Group by area
@@ -959,7 +1278,7 @@
             });
             const areas = Object.keys(areaData);
             const volumes = areas.map(area => areaData[area].total);
-
+            
             // Group by plant
             const plantData = {};
             filteredData.forEach(item => {
@@ -974,18 +1293,14 @@
             });
             const plants = Object.keys(plantData);
             const plantVolumes = plants.map(plant => plantData[plant].total);
-
-            // --- PERBAIKAN: GUNAKAN totalUniqueDays sebagai pembagi ---
-            const plantAvgVolumes = plants.map(plant => (plantData[plant].total / totalUniqueDays));
-            // --- AKHIR PERBAIKAN ---
-
+            const plantAvgVolumes = plants.map(plant => (plantData[plant].total / plantData[plant].count));
             const avgDistancePerPlant = plants.map(plant => {
                 if (plantData[plant].distanceCount > 0) {
                     return (plantData[plant].distance / plantData[plant].distanceCount);
                 }
                 return 0;
             });
-
+            
             // Group by truck
             const truckData = {};
             filteredData.forEach(item => {
@@ -998,7 +1313,7 @@
             const tripsPerTruck = trucks.map(truck => truckData[truck].count);
             const volumePerTruck = trucks.map(truck => truckData[truck].total);
             const avgLoadPerTruck = trucks.map(truck => (truckData[truck].total / truckData[truck].count));
-
+            
             // Group by sales
             const salesData = {};
             filteredData.forEach(item => {
@@ -1008,7 +1323,7 @@
             });
             const sales = Object.keys(salesData);
             const salesVolume = sales.map(salesPerson => salesData[salesPerson]);
-
+            
             // Group by customer
             const customerData = {};
             filteredData.forEach(item => {
@@ -1021,7 +1336,7 @@
                 .sort((a, b) => customerData[b] - customerData[a])
                 .slice(0, 30);
             const customerVolume = customers.map(customer => customerData[customer]);
-
+            
             // Group by distance for Trend Volume per Distance
             const distanceData = {};
             filteredData.forEach(item => {
@@ -1034,16 +1349,16 @@
             // Convert to arrays and sort by distance
             const distances = Object.keys(distanceData).map(Number).sort((a, b) => a - b);
             const volumePerDistance = distances.map(distance => distanceData[distance]);
-
+            
             return {
                 areas, volumes,
                 plants, plantVolumes, plantAvgVolumes, avgDistancePerPlant,
                 trucks, tripsPerTruck, volumePerTruck, avgLoadPerTruck,
                 sales, salesVolume, customers, customerVolume,
-                // --- PERBAIKAN: Hapus `dates` dan `dailyVolume` dari return ---
                 distances, volumePerDistance
             };
         }
+        
         // Function to create gradient for chart
         function createGradient(ctx, area, colors) {
             const gradient = ctx.createLinearGradient(0, area.bottom, 0, area.top);
@@ -1051,12 +1366,14 @@
             gradient.addColorStop(1, colors[1]);
             return gradient;
         }
+        
         // Function to initialize charts with highlight for highest value
         function initCharts(data) {
             // Destroy existing charts if they exist
             Object.values(charts).forEach(chart => {
                 if (chart) chart.destroy();
             });
+            
             // Helper function to generate background colors with highlight for max value
             function getHighlightColors(values, ctx, chartArea) {
                 if (values.length === 0) return [];
@@ -1069,11 +1386,13 @@
                     }
                 });
             }
+            
             // Helper function to generate gradient colors
             function getGradientColors(values, ctx, chartArea, colors) {
                 if (values.length === 0) return [];
                 return values.map(() => createGradient(ctx, chartArea, colors));
             }
+            
             // Common options for all charts
             const commonOptions = {
                 responsive: true,
@@ -1091,6 +1410,7 @@
                     }
                 }
             };
+            
             // Volume per Area Chart
             if (data.areas.length > 0) {
                 const ctx = document.getElementById('volumePerAreaChart').getContext('2d');
@@ -1127,6 +1447,7 @@
                     plugins: [ChartDataLabels]
                 });
             }
+            
             // Volume per Plant Chart
             if (data.plants.length > 0) {
                 const ctx = document.getElementById('volumePerPlantChart').getContext('2d');
@@ -1162,6 +1483,7 @@
                     plugins: [ChartDataLabels]
                 });
             }
+            
             // Average Volume per Plant Chart
             if (data.plants.length > 0) {
                 const ctx = document.getElementById('avgVolumePerPlantChart').getContext('2d');
@@ -1199,10 +1521,7 @@
                     plugins: [ChartDataLabels]
                 });
             }
-            // --- PERBAIKAN: HAPUS BAGIAN INI ---
-            // Daily Trend Chart (dihapus sepenuhnya)
-            // --- AKHIR PERBAIKAN ---
-
+            
             // Trip per Truck Chart
             if (data.trucks.length > 0) {
                 const ctx = document.getElementById('tripPerTruckChart').getContext('2d');
@@ -1238,6 +1557,7 @@
                     plugins: [ChartDataLabels]
                 });
             }
+            
             // Volume per Truck Chart
             if (data.trucks.length > 0) {
                 const ctx = document.getElementById('volumePerTruckChart').getContext('2d');
@@ -1273,6 +1593,7 @@
                     plugins: [ChartDataLabels]
                 });
             }
+            
             // Average Load per Truck Chart
             if (data.trucks.length > 0) {
                 const ctx = document.getElementById('avgLoadPerTruckChart').getContext('2d');
@@ -1310,6 +1631,7 @@
                     plugins: [ChartDataLabels]
                 });
             }
+            
             // Average Distance per Plant Chart
             if (data.plants.length > 0) {
                 const ctx = document.getElementById('avgDistancePerPlantChart').getContext('2d');
@@ -1347,6 +1669,7 @@
                     plugins: [ChartDataLabels]
                 });
             }
+            
             // Trend Volume per Distance Chart
             if (data.distances.length > 0) {
                 const ctx = document.getElementById('volumePerDistanceChart').getContext('2d');
@@ -1357,6 +1680,7 @@
                 })).sort((a, b) => a.distance - b.distance);
                 const sortedDistances = sortedData.map(item => `${item.distance} km`);
                 const sortedVolumes = sortedData.map(item => item.volume);
+                
                 charts.volumePerDistance = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1397,6 +1721,7 @@
                     plugins: [ChartDataLabels]
                 });
             }
+            
             // Volume per Sales Chart
             if (data.sales.length > 0) {
                 const ctx = document.getElementById('volumePerSalesChart').getContext('2d');
@@ -1432,6 +1757,7 @@
                     plugins: [ChartDataLabels]
                 });
             }
+            
             // Volume per Customer Chart - Changed to horizontal bar chart
             if (data.customers.length > 0) {
                 const ctx = document.getElementById('volumePerCustomerChart').getContext('2d');
@@ -1469,19 +1795,24 @@
                 });
             }
         }
+        
         // Helper function to format date
         function formatDate(date) {
             if (!date) return '';
             const d = new Date(date);
             return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         }
+        
         // Helper function to format numbers with thousand separators and optional decimals
         function formatNumber(num, decimals = 2) {
             if (num === null || num === undefined || isNaN(num)) return '0';
+            
             // Convert to number if it's a string
             num = typeof num === 'string' ? parseFloat(num) : num;
+            
             // Check if it's a whole number
             const isWholeNumber = num % 1 === 0;
+            
             // Format with thousand separators
             return num.toLocaleString('id-ID', {
                 minimumFractionDigits: isWholeNumber ? 0 : decimals,
