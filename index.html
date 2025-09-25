@@ -34,8 +34,10 @@
             padding: 20px;
             transition: all 0.3s ease;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
+            overflow: hidden; /* Menghilangkan scroll bar */
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
         .sidebar.collapsed {
             transform: translateX(-250px);
@@ -57,6 +59,23 @@
             justify-content: center;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             z-index: 100;
+        }
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto; /* Scroll hanya untuk konten */
+            padding-right: 5px; /* Ruang untuk scroll */
+        }
+        /* Menghilangkan scrollbar */
+        .sidebar-content::-webkit-scrollbar {
+            width: 5px;
+        }
+        .sidebar-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
         }
         .filter-group {
             margin-bottom: 25px;
@@ -393,6 +412,13 @@
             font-size: 12px;
             display: none;
         }
+        /* Single Option Area Notice */
+        .single-option-notice {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -402,69 +428,72 @@
             <button class="sidebar-toggle" id="sidebarToggle">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="file-upload">
-                <h3><i class="fas fa-file-excel"></i> Upload File Excel</h3>
-                <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;">
-                <label for="fileInput" class="file-upload-btn">
-                    <i class="fas fa-upload"></i> Pilih File
-                </label>
-                <div id="fileName" style="margin-top: 10px; font-size: 12px;"></div>
-            </div>
-            <div class="filter-group">
-                <h3><i class="fas fa-calendar-alt"></i> Date Range</h3>
-                <label for="startDate">Start Date</label>
-                <input type="date" id="startDate">
-                <label for="endDate">End Date</label>
-                <input type="date" id="endDate">
-            </div>
-            <div class="filter-group">
-                <h3><i class="fas fa-map-marker-alt"></i> Area</h3>
-                <div class="custom-dropdown" id="areaDropdown">
-                    <div class="dropdown-selected">
-                        <span>Select All</span>
-                        <i class="fas fa-chevron-down"></i>
+            <div class="sidebar-content">
+                <div class="file-upload">
+                    <h3><i class="fas fa-file-excel"></i> Upload File Excel</h3>
+                    <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;">
+                    <label for="fileInput" class="file-upload-btn">
+                        <i class="fas fa-upload"></i> Pilih File
+                    </label>
+                    <div id="fileName" style="margin-top: 10px; font-size: 12px;"></div>
+                </div>
+                <div class="filter-group">
+                    <h3><i class="fas fa-calendar-alt"></i> Date Range</h3>
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate">
+                </div>
+                <div class="filter-group">
+                    <h3><i class="fas fa-map-marker-alt"></i> Area</h3>
+                    <div class="custom-dropdown" id="areaDropdown">
+                        <div class="dropdown-selected">
+                            <span>Select All</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-options">
+                            <div class="dropdown-option selected" value="All">Select All</div>
+                        </div>
                     </div>
-                    <div class="dropdown-options">
-                        <div class="dropdown-option selected" value="All">Select All</div>
+                    <div class="single-option-notice" id="areaNotice" style="display: none;">Hanya satu area tersedia di data</div>
+                </div>
+                <div class="filter-group">
+                    <h3><i class="fas fa-industry"></i> Plant Name</h3>
+                    <div class="custom-dropdown" id="plantDropdown">
+                        <div class="dropdown-selected">
+                            <span>Select All</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-options">
+                            <div class="dropdown-option selected" value="All">Select All</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="filter-group">
-                <h3><i class="fas fa-industry"></i> Plant Name</h3>
-                <div class="custom-dropdown" id="plantDropdown">
-                    <div class="dropdown-selected">
-                        <span>Select All</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="dropdown-options">
-                        <div class="dropdown-option selected" value="All">Select All</div>
-                    </div>
-                </div>
-            </div>
-            <div class="filter-group">
-                <h3><i class="fas fa-truck"></i> Truck Type</h3>
-                <div class="custom-dropdown" id="truckTypeDropdown">
-                    <div class="dropdown-selected">
-                        <span>Select All</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="dropdown-options">
-                        <div class="dropdown-option selected" value="All">Select All</div>
-                        <div class="dropdown-option" value="TM Big">TM Big</div>
-                        <div class="dropdown-option" value="TM Mini">TM Mini</div>
+                <div class="filter-group">
+                    <h3><i class="fas fa-truck"></i> Truck Type</h3>
+                    <div class="custom-dropdown" id="truckTypeDropdown">
+                        <div class="dropdown-selected">
+                            <span>Select All</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-options">
+                            <div class="dropdown-option selected" value="All">Select All</div>
+                            <div class="dropdown-option" value="TM Big">TM Big</div>
+                            <div class="dropdown-option" value="TM Mini">TM Mini</div>
+                        </div>
                     </div>
                 </div>
+                <div class="toggle-options">
+                    <h3><i class="fas fa-toggle-on"></i> Tampilan Chart</h3>
+                    <label>
+                        <input type="checkbox" id="dataLabelsToggle" checked>
+                        Tampilkan Data Labels
+                    </label>
+                </div>
+                <button id="applyFilters" style="width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Apply Filters
+                </button>
             </div>
-            <div class="toggle-options">
-                <h3><i class="fas fa-toggle-on"></i> Tampilan Chart</h3>
-                <label>
-                    <input type="checkbox" id="dataLabelsToggle" checked>
-                    Tampilkan Data Labels
-                </label>
-            </div>
-            <button id="applyFilters" style="width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                Apply Filters
-            </button>
         </div>
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
@@ -719,7 +748,6 @@
         // Function to toggle sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            const icon = this.querySelector('i');
             sidebar.classList.toggle('collapsed');
             
             // Icon doesn't change, we keep the hamburger icon
@@ -954,6 +982,25 @@
                 areaOptions.innerHTML += `<div class="dropdown-option" value="${area}">${area}</div>`;
             });
             
+            // Show notice if only one area is available
+            const areaNotice = document.getElementById('areaNotice');
+            if (areas.length === 1) {
+                areaNotice.style.display = 'block';
+                // Auto-select the single area
+                setTimeout(() => {
+                    areaOptions.querySelectorAll('.dropdown-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    const singleAreaOption = areaOptions.querySelector(`.dropdown-option[value="${areas[0]}"]`);
+                    if (singleAreaOption) {
+                        singleAreaOption.classList.add('selected');
+                        document.querySelector('#areaDropdown .dropdown-selected span').textContent = areas[0];
+                    }
+                }, 100);
+            } else {
+                areaNotice.style.display = 'none';
+            }
+            
             // Update plant filter with all plants initially
             const plantOptions = document.querySelector('#plantDropdown .dropdown-options');
             plantOptions.innerHTML = '<div class="dropdown-option selected" value="All">Select All</div>';
@@ -965,7 +1012,11 @@
             const areaDropdown = document.getElementById('areaDropdown');
             const newAreaOptions = areaDropdown.querySelector('.dropdown-options');
             
-            newAreaOptions.addEventListener('click', function(e) {
+            // Remove existing event listeners to avoid duplicates
+            const newAreaOptionsClone = newAreaOptions.cloneNode(true);
+            newAreaOptions.parentNode.replaceChild(newAreaOptionsClone, newAreaOptions);
+            
+            newAreaOptionsClone.addEventListener('click', function(e) {
                 if (e.target.classList.contains('dropdown-option')) {
                     const value = e.target.getAttribute('value');
                     const text = e.target.textContent;
@@ -973,14 +1024,14 @@
                     // Toggle selection
                     if (value === 'All') {
                         // If "All" is clicked, select only "All"
-                        newAreaOptions.querySelectorAll('.dropdown-option').forEach(opt => {
+                        newAreaOptionsClone.querySelectorAll('.dropdown-option').forEach(opt => {
                             opt.classList.remove('selected');
                         });
                         e.target.classList.add('selected');
                         areaDropdown.querySelector('.dropdown-selected span').textContent = text;
                     } else {
                         // If a specific option is clicked, deselect "All"
-                        const allOption = newAreaOptions.querySelector('.dropdown-option[value="All"]');
+                        const allOption = newAreaOptionsClone.querySelector('.dropdown-option[value="All"]');
                         if (allOption) {
                             allOption.classList.remove('selected');
                         }
@@ -989,7 +1040,7 @@
                         e.target.classList.toggle('selected');
                         
                         // Update the selected text
-                        const selectedOptions = newAreaOptions.querySelectorAll('.dropdown-option.selected:not([value="All"])');
+                        const selectedOptions = newAreaOptionsClone.querySelectorAll('.dropdown-option.selected:not([value="All"])');
                         if (selectedOptions.length === 0) {
                             // If no specific options are selected, select "All"
                             if (allOption) {
@@ -1060,7 +1111,11 @@
             const plantDropdown = document.getElementById('plantDropdown');
             const newPlantOptions = plantDropdown.querySelector('.dropdown-options');
             
-            newPlantOptions.addEventListener('click', function(e) {
+            // Remove existing event listeners to avoid duplicates
+            const newPlantOptionsClone = newPlantOptions.cloneNode(true);
+            newPlantOptions.parentNode.replaceChild(newPlantOptionsClone, newPlantOptions);
+            
+            newPlantOptionsClone.addEventListener('click', function(e) {
                 if (e.target.classList.contains('dropdown-option')) {
                     const value = e.target.getAttribute('value');
                     const text = e.target.textContent;
@@ -1068,14 +1123,14 @@
                     // Toggle selection
                     if (value === 'All') {
                         // If "All" is clicked, select only "All"
-                        newPlantOptions.querySelectorAll('.dropdown-option').forEach(opt => {
+                        newPlantOptionsClone.querySelectorAll('.dropdown-option').forEach(opt => {
                             opt.classList.remove('selected');
                         });
                         e.target.classList.add('selected');
                         plantSelected.textContent = text;
                     } else {
                         // If a specific option is clicked, deselect "All"
-                        const allOption = newPlantOptions.querySelector('.dropdown-option[value="All"]');
+                        const allOption = newPlantOptionsClone.querySelector('.dropdown-option[value="All"]');
                         if (allOption) {
                             allOption.classList.remove('selected');
                         }
@@ -1084,7 +1139,7 @@
                         e.target.classList.toggle('selected');
                         
                         // Update the selected text
-                        const selectedOptions = newPlantOptions.querySelectorAll('.dropdown-option.selected:not([value="All"])');
+                        const selectedOptions = newPlantOptionsClone.querySelectorAll('.dropdown-option.selected:not([value="All"])');
                         if (selectedOptions.length === 0) {
                             // If no specific options are selected, select "All"
                             if (allOption) {
@@ -1195,6 +1250,9 @@
         
         // Function to update KPIs
         function updateKPIs() {
+            // Always show KPI cards
+            document.getElementById('kpiCards').style.display = 'grid';
+            
             if (filteredData.length === 0) {
                 document.getElementById('totalArea').textContent = '0';
                 document.getElementById('totalPlant').textContent = '0';
