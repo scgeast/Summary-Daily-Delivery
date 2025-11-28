@@ -289,25 +289,24 @@
             background: rgba(255,255,255,0.2);
         }
 
-        /* KPI Cards - PERBAIKAN: Semua label muat 1 baris */
-        /* KPI Cards - Diperbesar ukuran font, tetap 1 baris */
+        /* KPI Cards - Font lebih kecil, kartu lebih tinggi & lebar */
         .kpi-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); /* Sedikit lebih lebar untuk ruang teks */
+            grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); /* Lebih lebar */
             gap: 8px;
             margin-bottom: 20px;
         }
         .kpi-card {
             background: linear-gradient(135deg, #7C3AED 0%, #4C1D95 100%);
             border-radius: 8px;
-            padding: 8px 6px; /* Sedikit lebih banyak padding */
+            padding: 8px 6px; /* Padding lebih besar */
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             border: none;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 95px; /* Sedikit lebih tinggi untuk menyesuaikan font yang lebih besar */
+            min-height: 100px; /* Lebih tinggi */
             position: relative;
             overflow: hidden;
             text-align: center;
@@ -323,12 +322,12 @@
             z-index: 1;
         }
         .kpi-label {
-            font-size: 1.4rem; /* Diperbesar dari 1.25rem */
+            font-size: 1.0rem; /* Lebih kecil dari sebelumnya */
             color: white;
             text-transform: uppercase;
             letter-spacing: 0.03px;
             margin-bottom: 2px;
-            line-height: 1.1; /* Sedikit lebih longgar untuk keterbacaan */
+            line-height: 1.2; /* Lebih longgar agar tidak terlalu rapat */
             font-weight: 700;
             position: relative;
             z-index: 2;
@@ -336,11 +335,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
-            max-width: 140px; /* Sesuaikan dengan max-width grid jika perlu */
+            max-width: 140px; /* Disesuaikan dengan lebar kartu baru */
             display: block;
         }
         .kpi-value {
-            font-size: 1.1rem; /* Diperbesar dari 1rem */
+            font-size: 0.9rem; /* Lebih kecil */
             font-weight: 800;
             color: white;
             line-height: 1;
@@ -348,7 +347,6 @@
             z-index: 2;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
-
         /* Dashboard Toggle */
         .dashboard-toggle {
             display: flex;
@@ -450,9 +448,10 @@
         }
 
         /* Desktop Styles */
+        /* Desktop Styles */
         @media (min-width: 768px) {
             body {
-                font-size: 14px;
+                font-size: 12px;
             }
             .app-container {
                 flex-direction: row;
@@ -485,23 +484,22 @@
             .page-subtitle {
                 font-size: 1.5rem;
             }
-            /* KPI Cards - Ukuran font dikurangi, tetap 1 baris */
             .kpi-cards {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Sedikit dikurangi dari 160px */
+                grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); /* Lebih lebar */
                 gap: 10px;
             }
             .kpi-card {
-                padding: 8px 6px;
-                min-height: 60px;
+                padding: 10px 8px; /* Padding lebih besar */
+                min-height: 70px; /* Lebih tinggi */
                 border-radius: 10px;
             }
             .kpi-label {
-                font-size: 1.1rem; /* Dikurangi dari sebelumnya */
-                max-width: 140px; /* Disesuaikan dengan ukuran kartu baru */
-                line-height: 1.1;
+                font-size: 0.9rem; /* Lebih kecil dari sebelumnya */
+                max-width: 150px; /* Disesuaikan dengan lebar kartu baru */
+                line-height: 1.2; /* Lebih longgar */
             }
             .kpi-value {
-                font-size: 0.95rem; /* Dikurangi dari sebelumnya */
+                font-size: 0.85rem; /* Lebih kecil */
             }
             .filter-row {
                 flex-direction: row;
