@@ -289,25 +289,27 @@
             background: rgba(255,255,255,0.2);
         }
 
-        /* KPI Cards dengan gradient ungu - PERBAIKAN: Menambahkan 2 card baru */
+        /* KPI Cards - PERBAIKAN: Semua label muat 1 baris */
         .kpi-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 6px;
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 8px;
             margin-bottom: 20px;
         }
         .kpi-card {
             background: linear-gradient(135deg, #7C3AED 0%, #4C1D95 100%);
-            border-radius: 12px;
-            padding: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 6px 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             border: none;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            min-height: 75px;
+            justify-content: center;
+            align-items: center;
+            min-height: 55px;
             position: relative;
             overflow: hidden;
+            text-align: center;
         }
         .kpi-card::before {
             content: '';
@@ -320,21 +322,24 @@
             z-index: 1;
         }
         .kpi-label {
-            font-size: 0.55rem;
+            font-size: 0.45rem;
             color: white;
             text-transform: uppercase;
-            letter-spacing: 0.2px;
-            margin-bottom: 1px;
+            letter-spacing: 0.03px;
+            margin-bottom: 2px;
             line-height: 1;
-            font-weight: 600;
+            font-weight: 700;
             position: relative;
             z-index: 2;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            width: 70%;
+            max-width: 70px;
+            display: block;
         }
         .kpi-value {
-            font-size: 1.1rem;
+            font-size: 0.85rem;
             font-weight: 800;
             color: white;
             line-height: 1;
@@ -480,18 +485,20 @@
                 font-size: 1.5rem;
             }
             .kpi-cards {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-                gap: 12px;
+                grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+                gap: 10px;
             }
             .kpi-card {
-                padding: 12px;
-                min-height: 80px;
+                padding: 8px 6px;
+                min-height: 60px;
+                border-radius: 10px;
             }
             .kpi-label {
-                font-size: 0.6rem;
+                font-size: 0.5rem;
+                max-width: 130px;
             }
             .kpi-value {
-                font-size: 1.3rem;
+                font-size: 0.95rem;
             }
             .filter-row {
                 flex-direction: row;
@@ -514,14 +521,18 @@
         @media (max-width: 767px) {
             .kpi-cards {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
+                gap: 6px;
             }
             .kpi-card {
-                min-height: 70px;
-                padding: 8px;
+                min-height: 50px;
+                padding: 5px 3px;
+            }
+            .kpi-label {
+                font-size: 0.4rem;
+                max-width: 110px;
             }
             .kpi-value {
-                font-size: 1rem;
+                font-size: 0.8rem;
             }
             .normal-chart {
                 height: 280px;
@@ -616,7 +627,7 @@
 
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
-            <!-- KPI Cards - PERBAIKAN: Menambahkan 2 KPI card baru -->
+            <!-- KPI Cards - PERBAIKAN: Semua label muat 1 baris -->
             <div class="kpi-cards" id="kpiCards">
                 <div class="kpi-card">
                     <div class="kpi-label">🌍 Total Area</div>
@@ -636,12 +647,12 @@
                 </div>
                 <!-- KPI Card Baru: Total Target Volume -->
                 <div class="kpi-card">
-                    <div class="kpi-label">🎯 Total Target Vol</div>
+                    <div class="kpi-label">🎯 Target Vol</div>
                     <div class="kpi-value" id="totalTargetVolume">0 M³</div>
                 </div>
                 <!-- KPI Card Baru: % Of Target -->
                 <div class="kpi-card">
-                    <div class="kpi-label">📊 % Of Target</div>
+                    <div class="kpi-label">📊 % Target</div>
                     <div class="kpi-value" id="percentOfTarget">0%</div>
                 </div>
                 <div class="kpi-card">
@@ -676,15 +687,15 @@
                     <h3 class="chart-title">Total Volume per Plant (vs Target) (M³)</h3>
                     <div id="volumePerPlantChart" class="chart normal-chart"></div>
                 </div>
+                  <!-- Chart Trendline Volume per Day - dibuat lebih tinggi -->
+                <div class="chart-container">
+                    <h3 class="chart-title">Trendline Volume per Day (M³)</h3>
+                    <div id="trendlineVolumeChart" class="chart trendline-chart"></div>
+                </div>              
                 <!-- Chart Total Volume / Day - dipindahkan setelah chart Plant vs Target -->
                 <div class="chart-container">
                     <h3 class="chart-title">Total Volume / Day (M³)</h3>
                     <div id="volumePerDayChart" class="chart normal-chart"></div>
-                </div>
-                <!-- Chart Trendline Volume per Day - dibuat lebih tinggi -->
-                <div class="chart-container">
-                    <h3 class="chart-title">Trendline Volume per Day (M³)</h3>
-                    <div id="trendlineVolumeChart" class="chart trendline-chart"></div>
                 </div>
                 <!-- Chart berdasarkan Area (hanya ditampilkan jika ada lebih dari 1 area) -->
                 <div class="chart-container" id="avgVolumeAreaContainer">
