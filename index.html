@@ -485,8 +485,9 @@
             .page-subtitle {
                 font-size: 1.5rem;
             }
+            /* KPI Cards - Ukuran font dikurangi, tetap 1 baris */
             .kpi-cards {
-                grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Sedikit dikurangi dari 160px */
                 gap: 10px;
             }
             .kpi-card {
@@ -495,11 +496,12 @@
                 border-radius: 10px;
             }
             .kpi-label {
-                font-size: 1.4rem; /* Diperbesar dari 0.5rem */
-                max-width: 130px;
+                font-size: 1.1rem; /* Dikurangi dari sebelumnya */
+                max-width: 140px; /* Disesuaikan dengan ukuran kartu baru */
+                line-height: 1.1;
             }
             .kpi-value {
-                font-size: 1.1rem; /* Diperbesar dari 0.95rem */
+                font-size: 0.95rem; /* Dikurangi dari sebelumnya */
             }
             .filter-row {
                 flex-direction: row;
