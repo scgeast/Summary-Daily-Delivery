@@ -289,11 +289,11 @@
             background: rgba(255,255,255,0.2);
         }
 
-        /* KPI Cards dengan gradient ungu */
+        /* KPI Cards dengan gradient ungu - PERBAIKAN: Menambahkan 2 card baru */
         .kpi-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 6px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
             margin-bottom: 20px;
         }
         .kpi-card {
@@ -616,7 +616,7 @@
 
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
-            <!-- KPI Cards -->
+            <!-- KPI Cards - PERBAIKAN: Menambahkan 2 KPI card baru -->
             <div class="kpi-cards" id="kpiCards">
                 <div class="kpi-card">
                     <div class="kpi-label">🌍 Total Area</div>
@@ -633,6 +633,16 @@
                 <div class="kpi-card">
                     <div class="kpi-label">📅 Avg Vol/Day</div>
                     <div class="kpi-value" id="avgVolumeDay">0 M³</div>
+                </div>
+                <!-- KPI Card Baru: Total Target Volume -->
+                <div class="kpi-card">
+                    <div class="kpi-label">🎯 Total Target Vol</div>
+                    <div class="kpi-value" id="totalTargetVolume">0 M³</div>
+                </div>
+                <!-- KPI Card Baru: % Of Target -->
+                <div class="kpi-card">
+                    <div class="kpi-label">📊 % Of Target</div>
+                    <div class="kpi-value" id="percentOfTarget">0%</div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-label">🚛 Total Truck</div>
@@ -663,27 +673,27 @@
                 </div>
                 <!-- Chart Total Volume per Plant vs Target - hanya ditampilkan jika All Plants -->
                 <div class="chart-container" id="volumePerPlantContainer">
-                    <h3 class="chart-title">Actual Volume per Plant (vs Target) (M³)</h3>
+                    <h3 class="chart-title">Total Volume per Plant (vs Target) (M³)</h3>
                     <div id="volumePerPlantChart" class="chart normal-chart"></div>
                 </div>
                 <!-- Chart Total Volume / Day - dipindahkan setelah chart Plant vs Target -->
                 <div class="chart-container">
-                    <h3 class="chart-title">Actual Volume / Day (M³)</h3>
+                    <h3 class="chart-title">Total Volume / Day (M³)</h3>
                     <div id="volumePerDayChart" class="chart normal-chart"></div>
                 </div>
                 <!-- Chart Trendline Volume per Day - dibuat lebih tinggi -->
                 <div class="chart-container">
-                    <h3 class="chart-title">Trendline Act Volume per Day (M³)</h3>
+                    <h3 class="chart-title">Trendline Volume per Day (M³)</h3>
                     <div id="trendlineVolumeChart" class="chart trendline-chart"></div>
                 </div>
                 <!-- Chart berdasarkan Area (hanya ditampilkan jika ada lebih dari 1 area) -->
                 <div class="chart-container" id="avgVolumeAreaContainer">
-                    <h3 class="chart-title">Avg Act Volume / Day per Area (M³)</h3>
+                    <h3 class="chart-title">Avg Volume / Day per Area (M³)</h3>
                     <div id="avgVolumeAreaChart" class="chart normal-chart"></div>
                 </div>
                 <!-- Chart berdasarkan Plant (selalu ditampilkan) -->
                 <div class="chart-container" id="avgVolumePlantContainer">
-                    <h3 class="chart-title">Avg Act Volume / Day per Plant (M³)</h3>
+                    <h3 class="chart-title">Avg Volume / Day per Plant (M³)</h3>
                     <div id="avgVolumePlantChart" class="chart normal-chart"></div>
                 </div>
                 <div class="chart-container">
@@ -1299,7 +1309,7 @@
             }
         }
 
-        // Update KPI Cards - FIXED FOR AREA COUNTING
+        // PERBAIKAN: Update KPI Cards - Menambahkan perhitungan untuk 2 KPI baru
         function updateKPICards() {
             const data = appData.filteredData;
             
@@ -1314,6 +1324,16 @@
             const endDate = new Date(dom.endDate.value);
             const daySpan = Math.max((endDate - startDate) / (1000 * 60 * 60 * 24) + 1, 1);
             const avgVolumeDay = totalVolume / daySpan;
+            
+            // PERBAIKAN: Hitung Total Target Volume berdasarkan plant yang ada di data yang difilter
+            const plantsInFilteredData = [...new Set(data.map(item => item.plant).filter(plant => plant && plant.trim() !== ''))];
+            const totalTargetVolume = plantsInFilteredData.reduce((sum, plant) => {
+                return sum + (appData.plantTargets[plant] || 0);
+            }, 0);
+            
+            // PERBAIKAN: Hitung % Of Target
+            const percentOfTarget = totalTargetVolume > 0 ? (totalVolume / totalTargetVolume) * 100 : 0;
+            
             const totalTruck = new Set(data.map(item => item.truck).filter(truck => truck && truck.trim() !== '')).size;
             const totalTrip = new Set(data.map(item => item.dp_no).filter(dp_no => dp_no && dp_no.trim() !== '')).size;
             const avgLoadTrip = totalTrip > 0 ? totalVolume / totalTrip : 0;
@@ -1322,6 +1342,11 @@
             document.getElementById('totalPlant').textContent = formatNumber(totalPlant);
             document.getElementById('totalVolume').textContent = formatNumber(totalVolume) + ' M³';
             document.getElementById('avgVolumeDay').textContent = formatNumber(avgVolumeDay, true) + ' M³';
+            
+            // PERBAIKAN: Update KPI baru
+            document.getElementById('totalTargetVolume').textContent = formatNumber(totalTargetVolume) + ' M³';
+            document.getElementById('percentOfTarget').textContent = formatNumber(percentOfTarget, true) + '%';
+            
             document.getElementById('totalTruck').textContent = formatNumber(totalTruck);
             document.getElementById('totalTrip').textContent = formatNumber(totalTrip);
             document.getElementById('avgLoadTrip').textContent = formatNumber(avgLoadTrip, true) + ' M³';
