@@ -776,6 +776,18 @@
             pageSubtitle: document.getElementById('pageSubtitle')
         };
 
+        // Function untuk menentukan warna khusus berdasarkan nomor truck
+        function getTruckColor(truckNo) {
+            const specialTrucks = {
+                'A969': '#FF6347', // Tomat/Merah
+                'A448': '#FFD700', // Emas
+                'A922': '#32CD32', // Lime Green/Hijau Terang
+                'A610': '#FF69B4'  // Hot Pink/Merah Muda Cerah
+            };
+            
+            return specialTrucks[truckNo] || null; // Return null untuk truck biasa
+        }
+
         // Inisialisasi Aplikasi
         function initApp() {
             setupEventListeners();
@@ -1881,7 +1893,7 @@
             Plotly.newPlot('avgVolumePlantChart', [trace], layout, { responsive: true });
         }
 
-        // FIXED: Truck Utilization Chart - menggunakan Truck No
+        // FIXED: Truck Utilization Chart - menggunakan Truck No dengan warna khusus
         function renderTruckUtilizationChart() {
             const data = appData.filteredData;
             const truckVolumes = {};
@@ -1899,7 +1911,15 @@
             const trucks = sortedTrucks.map(item => item[0]);
             const volumes = sortedTrucks.map(item => item[1]);
 
-            const colors = generateGradientColors(volumes.length, '#F59E0B', '#D97706');
+            // Buat array warna dengan warna khusus untuk truck tertentu
+            const colors = trucks.map(truck => {
+                const specialColor = getTruckColor(truck);
+                if (specialColor) {
+                    return specialColor;
+                }
+                // Untuk truck biasa, gunakan gradient
+                return '#F59E0B'; // Warna default
+            });
 
             const trace = {
                 x: trucks,
