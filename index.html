@@ -335,7 +335,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
-            max-width: 140px; /* Disesuaikan dengan lebar kartu baru */
+            max-width: 130px; /* Disesuaikan dengan lebar kartu baru */
             display: block;
         }
         .kpi-value {
@@ -448,7 +448,6 @@
         }
 
         /* Desktop Styles */
-        /* Desktop Styles */
         @media (min-width: 768px) {
             body {
                 font-size: 12px;
@@ -495,7 +494,7 @@
             }
             .kpi-label {
                 font-size: 0.9rem; /* Lebih kecil dari sebelumnya */
-                max-width: 150px; /* Disesuaikan dengan lebar kartu baru */
+                max-width: 130px; /* Disesuaikan dengan lebar kartu baru */
                 line-height: 1.2; /* Lebih longgar */
             }
             .kpi-value {
@@ -1235,9 +1234,23 @@
                 input.addEventListener('change', function() {
                     const plant = this.getAttribute('data-plant');
                     appData.plantTargets[plant] = parseInt(this.value) || 0;
+                    
+                    // PERBAIKAN: Update KPI cards setiap kali target berubah
+                    updateKPICards();
+                    
+                    // Update chart jika di dashboard logistic
                     if (appData.currentDashboard === 'logistic') {
                         renderVolumePerPlantChart();
                     }
+                });
+
+                // PERBAIKAN: Tambahkan event listener untuk input real-time
+                input.addEventListener('input', function() {
+                    const plant = this.getAttribute('data-plant');
+                    appData.plantTargets[plant] = parseInt(this.value) || 0;
+                    
+                    // Update KPI cards secara real-time
+                    updateKPICards();
                 });
             });
         }
@@ -1315,6 +1328,10 @@
             document.querySelectorAll('.target-input').forEach(input => {
                 input.value = 0;
             });
+            
+            // PERBAIKAN: Update KPI cards setelah reset target
+            updateKPICards();
+            
             if (appData.currentDashboard === 'logistic') {
                 renderVolumePerPlantChart();
             }
