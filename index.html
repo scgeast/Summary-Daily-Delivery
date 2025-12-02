@@ -571,7 +571,7 @@
                     <div class="upload-area" id="uploadArea">
                         <div class="upload-icon">📁</div>
                         <p>Upload File Actual (Excel)</p>
-                        <p class="file-size">Ukuran: 0.2MB - 50MB</p>
+                        <p class="file-size">Ukuran: 0.1MB - 2000MB</p>
                         <input type="file" id="fileInput" class="file-input" accept=".xlsx, .xls">
                     </div>
                 </div>
@@ -924,7 +924,7 @@
                 dom.uploadArea.innerHTML = `
                     <div class="upload-icon">📁</div>
                     <p>Upload File Actual (Excel)</p>
-                    <p class="file-size">Ukuran: 0.2MB - 50MB</p>
+                    <p class="file-size">Ukuran: 0.01MB - 200MB</p>
                     <input type="file" id="fileInput" class="file-input" accept=".xlsx, .xls">
                 `;
                 // Re-attach event listener
@@ -940,7 +940,7 @@
 
             const fileSizeMB = file.size / (1024 * 1024);
             if (fileSizeMB < 0.2 || fileSizeMB > 50) {
-                showNotification('⚠️ File harus berukuran antara 0.2MB - 50MB', 'error');
+                showNotification('⚠️ File harus berukuran antara 0.01MB - 200MB', 'error');
                 return;
             }
 
