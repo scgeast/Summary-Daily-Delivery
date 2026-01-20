@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        /* CSS Styles tetap sama seperti sebelumnya */
         * {
             margin: 0;
             padding: 0;
@@ -907,85 +908,117 @@
             return specialTrucks[truckNo] || null;
         }
 
-        // PERBAIKAN: Fungsi untuk menghitung Avg Load/Hour sesuai Excel dengan pembagi yang TEPAT
-        // Formula Excel: =AVERAGE(B5:AUJ5) -> Hanya menghitung sel yang memiliki nilai (bukan 0)
-        // Pembagi adalah jumlah sel yang memiliki DP NO (nilai > 0), bukan total 1440 menit
-        function calculateAvgLoadHour(data) {
-            // Struktur untuk menyimpan data per plant
-            const plantData = {};
+        // PERBAIKAN: Fungsi untuk menghitung Avg Load/Hour sesuai formula yang benar
+        // Formula: Load Per Hour = Total DP No / Jumlah Jam yang memiliki DP No / Jumlah Hari dalam periode / Jumlah Plant yang dipilih
+        function calculateAvgLoadHour(data, filterStartDate, filterEndDate, selectedPlant = 'all') {
+            console.log('🔍 DEBUG calculateAvgLoadHour:');
+            console.log('Jumlah data:', data.length);
+            console.log('Selected Plant:', selectedPlant);
+            
+            // Hitung jumlah hari dalam periode filter
+            const daySpan = Math.max((filterEndDate - filterStartDate) / (1000 * 60 * 60 * 24) + 1, 1);
+            
+            // Hitung jumlah plant yang relevan
+            let relevantPlants = 0;
+            if (selectedPlant === 'all') {
+                // Jika "All Plants", hitung plant yang memiliki data
+                const uniquePlants = new Set(data
+                    .filter(item => item.plant && item.plant.trim() !== '' && item.timeObject && item.dp_no)
+                    .map(item => item.plant));
+                relevantPlants = uniquePlants.size;
+            } else {
+                // Jika plant spesifik, jumlah plant = 1
+                relevantPlants = 1;
+            }
             
             // Proses data per jam untuk setiap plant
+            const plantData = {};
+            const hourDPs = new Set(); // Untuk menyimpan jam yang memiliki DP (global)
+            
             data.forEach(item => {
-                if (item.plant && item.plant.trim() !== '' && item.timeObject) {
+                if (item.plant && item.plant.trim() !== '' && item.timeObject && item.dp_no) {
                     const plant = item.plant;
                     const hour = item.timeObject.hours;
-                    const minute = item.timeObject.minutes;
+                    const dpNo = item.dp_no;
                     
-                    // Format waktu menjadi "HH:MM" (setiap menit)
-                    const timeKey = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    // Catat jam yang memiliki DP (global)
+                    hourDPs.add(hour);
                     
                     // Inisialisasi plant jika belum ada
                     if (!plantData[plant]) {
                         plantData[plant] = {
-                            dpPerTime: {}, // Object untuk menyimpan jumlah DP per waktu
-                            totalDP: 0,
-                            timeSlots: new Set() // Set untuk waktu yang memiliki DP
+                            uniqueDPs: new Set(), // Set untuk DP No unik per plant
+                            hourDPs: new Set(),   // Set untuk jam yang memiliki DP per plant
+                            dpCounts: {}          // Object untuk menghitung DP per jam per plant
                         };
                     }
                     
-                    // Tambahkan DP pada waktu tertentu
-                    if (!plantData[plant].dpPerTime[timeKey]) {
-                        plantData[plant].dpPerTime[timeKey] = 0;
+                    // Tambahkan DP No ke set unik per plant
+                    plantData[plant].uniqueDPs.add(dpNo);
+                    
+                    // Catat jam yang memiliki DP untuk plant ini
+                    plantData[plant].hourDPs.add(hour);
+                    
+                    // Simpan DP per jam untuk plant ini
+                    const hourKey = hour;
+                    if (!plantData[plant].dpCounts[hourKey]) {
+                        plantData[plant].dpCounts[hourKey] = new Set();
                     }
-                    plantData[plant].dpPerTime[timeKey]++;
-                    plantData[plant].totalDP++;
-                    plantData[plant].timeSlots.add(timeKey);
+                    plantData[plant].dpCounts[hourKey].add(dpNo);
                 }
             });
             
-            // Hitung Plant Averages sesuai Excel
-            const plantAverages = {};
-            const plantDetails = {};
+            console.log('Jumlah hari (daySpan):', daySpan);
+            console.log('Jumlah plant relevan:', relevantPlants);
+            console.log('Jumlah jam yang memiliki DP (global):', hourDPs.size);
             
+            // Hitung total DP No unik (global)
+            let totalUniqueDPs = 0;
             Object.keys(plantData).forEach(plant => {
-                const totalDP = plantData[plant].totalDP;
-                const totalTimeSlots = plantData[plant].timeSlots.size;
+                totalUniqueDPs += plantData[plant].uniqueDPs.size;
+            });
+            
+            // Hitung jumlah jam yang memiliki DP (global) - sudah dihitung di hourDPs
+            const totalHoursWithDP = hourDPs.size;
+            
+            console.log('Total DP No unik (global):', totalUniqueDPs);
+            console.log('Total jam dengan DP (global):', totalHoursWithDP);
+            
+            // Hitung Avg Load/Hour sesuai formula
+            // Formula: Total DP No / Jumlah Jam dengan DP / Jumlah Hari / Jumlah Plant
+            let avgLoadHour = 0;
+            
+            if (totalHoursWithDP > 0 && daySpan > 0 && relevantPlants > 0) {
+                avgLoadHour = parseFloat((totalUniqueDPs / totalHoursWithDP / daySpan / relevantPlants).toFixed(2));
+                console.log(`📈 Formula: ${totalUniqueDPs} / ${totalHoursWithDP} / ${daySpan} / ${relevantPlants} = ${avgLoadHour}`);
+            } else {
+                console.log('⚠️ Tidak dapat menghitung Avg Load/Hour karena salah satu nilai nol:');
+                console.log('- Total Hours with DP:', totalHoursWithDP);
+                console.log('- Day Span:', daySpan);
+                console.log('- Relevant Plants:', relevantPlants);
+            }
+            
+            // Hitung untuk per plant (untuk chart dan debugging)
+            const plantAverages = {};
+            Object.keys(plantData).forEach(plant => {
+                const plantUniqueDPs = plantData[plant].uniqueDPs.size;
+                const plantHoursWithDP = plantData[plant].hourDPs.size;
                 
-                // PERHATIAN: Excel AVERAGE hanya menghitung sel yang memiliki nilai
-                // Jadi pembagi adalah jumlah time slots yang memiliki DP (bukan 1440)
-                if (totalTimeSlots > 0) {
-                    plantAverages[plant] = parseFloat((totalDP / totalTimeSlots).toFixed(2));
+                if (plantHoursWithDP > 0 && daySpan > 0) {
+                    plantAverages[plant] = parseFloat((plantUniqueDPs / plantHoursWithDP / daySpan / 1).toFixed(2));
                 } else {
                     plantAverages[plant] = 0;
                 }
-                
-                plantDetails[plant] = {
-                    totalDP: totalDP,
-                    totalTimeSlots: totalTimeSlots,
-                    average: plantAverages[plant]
-                };
             });
-            
-            // Hitung Overall Average (rata-rata dari semua plant)
-            let overallTotalDP = 0;
-            let overallTotalTimeSlots = 0;
-            
-            Object.keys(plantDetails).forEach(plant => {
-                overallTotalDP += plantDetails[plant].totalDP;
-                overallTotalTimeSlots += plantDetails[plant].totalTimeSlots;
-            });
-            
-            let overallAverage = 0;
-            if (overallTotalTimeSlots > 0) {
-                overallAverage = parseFloat((overallTotalDP / overallTotalTimeSlots).toFixed(2));
-            }
             
             return {
+                avgLoadHour,
                 plantAverages,
-                overallAverage,
-                plantDetails,
-                overallTotalDP,
-                overallTotalTimeSlots
+                totalUniqueDPs,
+                totalHoursWithDP,
+                daySpan,
+                relevantPlants,
+                plantData
             };
         }
 
@@ -1371,7 +1404,7 @@
             console.log('🔍 Hasil Identifikasi Kolom:', columnMapping);
 
             // Validasi kolom wajib
-            const requiredColumns = ['date', 'qty'];
+            const requiredColumns = ['date', 'qty', 'dp_no'];
             const missingColumns = requiredColumns.filter(col => !columnMapping[col]);
             
             if (missingColumns.length > 0) {
@@ -1439,18 +1472,18 @@
                             obj[columnType] = (value || value === 0) ? String(value).trim() : '';
                             break;
                             
+                        case 'dp_no':
+                            obj[columnType] = (value || value === 0) ? String(value).trim() : `TRIP_${index + 1}`;
+                            break;
+                            
                         default:
                             obj[columnType] = (value || value === 0) ? String(value).trim() : '';
                             break;
                     }
                 });
                 
-                if (!obj.dp_no && columnMapping.dp_no === undefined) {
-                    obj.dp_no = `TRIP_${index + 1}`;
-                }
-                
                 return obj;
-            }).filter(item => item.date && item.qty > 0);
+            }).filter(item => item.date && item.qty > 0 && item.dp_no);
 
             console.log(`📊 Data berhasil diproses: ${appData.rawData.length} records valid`);
             if (appData.rawData.length > 0) {
@@ -1627,7 +1660,7 @@
             }
         }
 
-        // PERBAIKAN: Update KPI Cards dengan perhitungan Avg Load/Hour yang AKURAT sesuai Excel
+        // PERBAIKAN: Update KPI Cards dengan perhitungan Avg Load/Hour yang BENAR
         function updateKPICards() {
             const data = appData.filteredData;
             
@@ -1654,15 +1687,16 @@
             
             const totalTruck = new Set(data.map(item => item.truck).filter(truck => truck && truck.trim() !== '')).size;
             
-            // Hitung Total DP Unik
+            // Hitung Total DP No Unik
             const totalDP = new Set(data.map(item => item.dp_no).filter(dp_no => dp_no && dp_no.trim() !== '')).size;
             
             const totalTrip = totalDP;
             const avgLoadTrip = totalTrip > 0 ? totalVolume / totalTrip : 0;
             
-            // PERBAIKAN: Hitung Avg Load per Hour dengan rumus Excel yang AKURAT
-            const loadHourData = calculateAvgLoadHour(data);
-            const avgLoadHour = loadHourData.overallAverage;
+            // PERBAIKAN: Hitung Avg Load per Hour dengan rumus yang benar
+            const selectedPlant = dom.plantFilter.value;
+            const loadHourData = calculateAvgLoadHour(data, startDate, endDate, selectedPlant);
+            const avgLoadHour = loadHourData.avgLoadHour;
 
             document.getElementById('totalArea').textContent = formatNumber(totalArea);
             document.getElementById('totalPlant').textContent = formatNumber(totalPlant);
@@ -1674,7 +1708,7 @@
             document.getElementById('percentOfTarget').textContent = formatNumber(percentOfTarget, true) + '%';
             
             document.getElementById('totalTruck').textContent = formatNumber(totalTruck);
-            document.getElementById('totalTrip').textContent = formatNumber(totalTrip);
+            document.getElementById('totalTrip').textContent = formatNumber(totalDP);
             document.getElementById('avgLoadTrip').textContent = formatNumber(avgLoadTrip, true) + ' M³';
             document.getElementById('avgLoadHour').textContent = avgLoadHour.toFixed(2);
             
@@ -1684,10 +1718,13 @@
         // Function untuk update KPI value di chart header
         function updateChartKPIValues() {
             const data = appData.filteredData;
-            const loadHourData = calculateAvgLoadHour(data);
+            const startDate = new Date(dom.startDate.value);
+            const endDate = new Date(dom.endDate.value);
+            const selectedPlant = dom.plantFilter.value;
+            const loadHourData = calculateAvgLoadHour(data, startDate, endDate, selectedPlant);
             
             if (dom.avgLoadHourValue) {
-                dom.avgLoadHourValue.textContent = loadHourData.overallAverage.toFixed(2);
+                dom.avgLoadHourValue.textContent = loadHourData.avgLoadHour.toFixed(2);
             }
         }
 
@@ -2252,14 +2289,18 @@
             Plotly.newPlot('truckUtilizationChart', [trace], layout, { responsive: true });
         }
 
-        // PERBAIKAN: Load per Hour Chart - DENGAN LABEL DATA di atas marker
+        // PERBAIKAN: Load per Hour Chart - DENGAN FORMULA YANG BENAR
         function renderLoadPerHourChart() {
             const data = appData.filteredData;
             const selectedPlant = dom.plantFilter.value;
+            const startDate = new Date(dom.startDate.value);
+            const endDate = new Date(dom.endDate.value);
             
             console.log('🔍 DEBUG renderLoadPerHourChart:');
             console.log('Total data filtered:', data.length);
             console.log('Selected Plant:', selectedPlant);
+            console.log('Start Date:', startDate);
+            console.log('End Date:', endDate);
             
             // Filter data berdasarkan plant yang dipilih
             let filteredData = data;
@@ -2267,55 +2308,50 @@
                 filteredData = data.filter(item => item.plant === selectedPlant);
             }
             
+            // Hitung Load Per Hour menggunakan formula yang benar
+            const loadHourData = calculateAvgLoadHour(filteredData, startDate, endDate, selectedPlant);
+            
             // Data untuk chart - array untuk setiap jam (00-23)
             const hourLabels = Array.from({length: 24}, (_, i) => `${i.toString().padStart(2, '0')}:00`);
             
-            // Gunakan Set untuk menghindari duplikasi DP_NO per jam
-            const uniqueDPsPerHour = Array(24).fill(0).map(() => new Set());
-            let totalDPCount = 0;
+            // Hitung DP per jam (unik) - GLOBAL untuk semua plant yang relevan
+            const dpCountsPerHour = Array(24).fill(0);
+            const hourDPs = new Set();
             
             filteredData.forEach((item, index) => {
-                if (item.timeObject) {
+                if (item.timeObject && item.dp_no) {
                     const hour = item.timeObject.hours;
                     if (hour >= 0 && hour < 24) {
-                        // Gunakan DP_NO sebagai identifier unik
-                        if (item.dp_no) {
-                            const dpNo = item.dp_no.toString().trim();
-                            if (!uniqueDPsPerHour[hour].has(dpNo)) {
-                                uniqueDPsPerHour[hour].add(dpNo);
-                                totalDPCount++;
-                            }
-                        } else {
-                            // Jika tidak ada DP_NO, gunakan index sebagai fallback
-                            uniqueDPsPerHour[hour].add(`no_dp_${index}`);
-                            totalDPCount++;
+                        const dpNo = item.dp_no.toString().trim();
+                        if (!hourDPs.has(`${hour}_${dpNo}`)) {
+                            hourDPs.add(`${hour}_${dpNo}`);
+                            dpCountsPerHour[hour]++;
                         }
                     }
                 }
             });
             
-            // Hitung jumlah DP unik per jam
-            const dpCountsPerHour = uniqueDPsPerHour.map(set => set.size);
-            
-            // Hitung Avg Load/Hour (dengan data unik)
-            const loadHourData = calculateAvgLoadHour(filteredData);
-            const avgLoadHour = loadHourData.overallAverage;
-            
             // Update header period
-            const startDate = new Date(dom.startDate.value);
-            const endDate = new Date(dom.endDate.value);
             const periodString = `Periode: ${startDate.toLocaleDateString('id-ID')} - ${endDate.toLocaleDateString('id-ID')}`;
             document.getElementById('loadPerHourPeriod').textContent = periodString;
             
             // Update KPI di chart header - tampilkan Avg Load/Hour
-            document.getElementById('avgLoadHourValue').textContent = avgLoadHour.toFixed(2);
+            document.getElementById('avgLoadHourValue').textContent = loadHourData.avgLoadHour.toFixed(2);
             
-            // Tentukan nilai terendah dan tertinggi untuk pewarnaan
-            const nonZeroCounts = dpCountsPerHour.filter(v => v > 0);
-            const maxDPValue = Math.max(...dpCountsPerHour);
-            const minDPValue = nonZeroCounts.length > 0 ? Math.min(...nonZeroCounts) : 0;
+            // Tampilkan detail perhitungan di console untuk debugging
+            console.log('📊 Load Per Hour Calculation Details:');
+            console.log('Total DP Unik:', loadHourData.totalUniqueDPs);
+            console.log('Total Jam dengan DP:', loadHourData.totalHoursWithDP);
+            console.log('Jumlah Hari (daySpan):', loadHourData.daySpan);
+            console.log('Jumlah Plant Relevan:', loadHourData.relevantPlants);
+            console.log('Avg Load/Hour:', loadHourData.avgLoadHour);
+            console.log('DP per jam:', dpCountsPerHour);
             
-            console.log('Max DP Value (unique):', maxDPValue, 'Min DP Value (unique):', minDPValue);
+            // Tampilkan formula di console untuk debugging
+            if (loadHourData.totalUniqueDPs > 0 && loadHourData.totalHoursWithDP > 0 && 
+                loadHourData.daySpan > 0 && loadHourData.relevantPlants > 0) {
+                console.log(`📈 Formula: ${loadHourData.totalUniqueDPs} / ${loadHourData.totalHoursWithDP} / ${loadHourData.daySpan} / ${loadHourData.relevantPlants} = ${loadHourData.avgLoadHour}`);
+            }
             
             // SEMUA MARKER WARNA BIRU SAMA - tidak ada merah/hijau khusus
             const colors = dpCountsPerHour.map(() => '#2563EB'); // Semua biru
@@ -2423,10 +2459,8 @@
             
             // Tampilkan summary di console
             console.log('📊 Summary Load per Hour Chart:');
-            console.log('Total DP (unik):', totalDPCount);
-            console.log('Max per jam:', maxDPValue, 'pada jam', hourLabels[dpCountsPerHour.indexOf(maxDPValue)]);
-            console.log('Min per jam (non-zero):', minDPValue, 'pada jam', hourLabels[dpCountsPerHour.indexOf(minDPValue)]);
-            console.log('Avg Load/Hour:', avgLoadHour.toFixed(2));
+            console.log('Max per jam:', maxYValue, 'pada jam', hourLabels[dpCountsPerHour.indexOf(maxYValue)]);
+            console.log('Min per jam (non-zero):', minYValue, 'pada jam', hourLabels[dpCountsPerHour.indexOf(minYValue)]);
             console.log('Y-axis range:', [yMin, yMax]);
         }
 
